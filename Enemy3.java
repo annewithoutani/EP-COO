@@ -1,0 +1,75 @@
+import java.util.ArrayList;
+import java.awt.Color;
+
+public class Enemy3 extends Enemy {
+
+    private boolean movingRight; // Indica se o inimigo está se movendo para a direita
+
+    // Construtor da classe Enemy3
+    public Enemy3() {
+        super(11.00, Main.INACTIVE); // Chama o construtor da classe Enemy com raio 11.00 e estado INACTIVE
+        movingRight = true; // Inicia a movimentação para a direita
+    }
+
+    // Método para atualizar o estado do Enemy3
+    public void updateState(long delta, long currentTime, Player player, ArrayList<Projectile> eprojectiles3) {
+        // Verifica se o inimigo está explodindo
+        if (getState() == Main.EXPLODING) {
+            // Se o tempo atual for maior que o tempo de fim da explosão, define o estado
+            // como INACTIVE
+            if (currentTime > getExEnd()) {
+                setState(Main.INACTIVE);
+            }
+        }
+        // Verifica se o inimigo está ativo
+        if (getState() == Main.ACTIVE) {
+            // Se o inimigo sair da tela, define o estado como INACTIVE
+            if (getY() > GameLib.HEIGHT + 10) {
+                setState(Main.INACTIVE);
+            } else {
+                // Movimentação em zig-zag
+                if (movingRight) {
+                    setX(getX() + 0.15 * delta);
+                    if (getX() > GameLib.WIDTH - 10) {
+                        movingRight = false; // Altera a direção para a esquerda
+                    }
+                } else {
+                    setX(getX() - 0.15 * delta);
+                    if (getX() < 10) {
+                        movingRight = true; // Altera a direção para a direita
+                    }
+                }
+                setY(getY() + 0.1 * delta); // Atualiza a posição Y do inimigo
+
+                // Disparar projéteis em direção ao jogador
+                if (currentTime > getShoot() && getY() < player.getY()) {
+                    int free = Main.findFreeIndex(eprojectiles3);
+                    if (free < eprojectiles3.size()) {
+                        // Define a posição e a velocidade do projétil
+                        eprojectiles3.get(free).setX(getX());
+                        eprojectiles3.get(free).setY(getY());
+                        eprojectiles3.get(free).setVX(0);
+                        eprojectiles3.get(free).setVY(0.35);
+                        eprojectiles3.get(free).setState(Main.ACTIVE);
+                        // Define o tempo do próximo disparo
+                        setShoot(currentTime + 1500);
+                    }
+                }
+            }
+        }
+    }
+
+    // Método para renderizar o Enemy3
+    public void render(long currentTime) {
+        // Renderiza a explosão se o inimigo estiver explodindo
+        if (getState() == Main.EXPLODING) {
+            double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
+            GameLib.drawExplosion(getX(), getY(), alpha);
+        }
+        // Renderiza o inimigo se ele estiver ativo
+        if (getState() == Main.ACTIVE) {
+            GameLib.setColor(Color.ORANGE);
+            GameLib.drawCircle(getX(), getY(), getRadius());
+        }
+    }
+}
