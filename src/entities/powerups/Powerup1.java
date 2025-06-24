@@ -15,7 +15,7 @@ public class Powerup1 extends Entity {
     }
 
     // Método para posicionar o power-up na tela
-    public void place() {
+    public void place(long currentTime) {
         setX((double) GameLib.WIDTH / 2); // Sempre no meio da tela
         setY((double) GameLib.HEIGHT / 2 + 200); // Posiciona o power-up fora da tela inicialmente
         setState(Main.ACTIVE); // Define o estado do power-up como ativo

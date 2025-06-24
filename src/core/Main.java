@@ -13,6 +13,7 @@ import entities.powerups.*;
 // Para compilar e rodar o programa, utilize os seguintes comandos:
 // 1°: javac -d bin -sourcepath src $(find src -name "*.java")
 // 2°: java -cp bin core.Main
+
 public class Main {
 
 	// Constantes para os estados das entidades
@@ -33,7 +34,6 @@ public class Main {
 	private Background background1; // Primeira camada do fundo
 	private Background background2; // Segunda camada do fundo
 	private Powerup1 powerup; // Instância do power-up
-	private Powerup2 powerup2; // Instância do power-up 2
 	private long nextPowerupTime; // Tempo do próximo spawn de power-up
 
 	// Listas de projéteis e inimigos
@@ -91,16 +91,11 @@ public class Main {
 		for (int i = 0; i < 5; i++) {
 			enemies3.add(new Enemy3()); // Adiciona 5 inimigos do tipo 3 à lista
 		}
+
 		// Inicializa o power-up
-		powerup = new Powerup1(); // Cria uma nova instância da classe Powerup
+		powerup = new Powerup1(); // Cria uma nova instância da classe Powerup1
 		powerup.setX(Math.random() * (GameLib.WIDTH - 20.0) + 10.0); // Define a posição X inicial do power-up de forma
 																		// aleatória
-		powerup.setY(GameLib.HEIGHT); // Define a posição Y inicial do power-up fora da tela
-
-		// Inicializa o power-up 2
-		powerup2 = new Powerup2();
-		powerup2.setX(Math.random() * (GameLib.WIDTH - 20.0) + 10.0);
-		powerup2.setY(GameLib.HEIGHT);
 		powerup.setY(GameLib.HEIGHT); // Define a posição Y inicial do power-up fora da tela
 
 		// Inicializa tempos de spawn
@@ -127,7 +122,7 @@ public class Main {
 			// Verifica se é hora de criar um novo power-up
 			if (currentTime >= nextPowerupTime) {
 				// Posiciona o power-up na tela
-				powerup.place();
+				powerup.place(currentTime);
 
 				// Define o tempo do próximo spawn de power-up para 15 segundos no futuro
 				nextPowerupTime = currentTime + 15000;
@@ -227,22 +222,22 @@ public class Main {
 	}
 
 	public void gameLoop() {
-		// Usa o campo de instância 'running' para controlar a execução do loop do jogo
+		boolean running = true; // Flag para controlar a execução do loop do jogo
 		long delta; // Tempo entre frames
 		currentTime = System.currentTimeMillis(); // Tempo atual em milissegundos
-		long lastTime = currentTime; // Tempo do último frame
 
 		GameLib.initGraphics(); // Inicializa a biblioteca gráfica
 
 		// Loop principal do jogo
-		while (this.running) {
+		while (running) {
+			// Calcula o tempo delta desde o último frame
+			delta = System.currentTimeMillis() - currentTime;
+			// Atualiza o tempo atual
 			currentTime = System.currentTimeMillis();
-			delta = currentTime - lastTime;
-			lastTime = currentTime;
 
 			// Verificação de colisões
 			String collisionStatus = player.checkCollisions(projectiles, eprojectiles1, eprojectiles2, eprojectiles3,
-					enemies1, enemies2, enemies3, powerup, powerup2, currentTime);
+					enemies1, enemies2, enemies3, powerup, currentTime);
 			// Se houve uma colisão com um projétil inimigo, atualiza a barra de vida
 			if ("hit".equals(collisionStatus)) {
 				player.hpbar.renderHP();
@@ -279,17 +274,17 @@ public class Main {
 
 			// Atualizações de estados dos inimigos tipo 1
 			for (Enemy1 enemy : enemies1) {
-				enemy.updateState(delta, currentTime, eprojectiles1);
+				enemy.updateState(delta, currentTime, player, eprojectiles1);
 			}
 
 			// Atualizações de estados dos inimigos tipo 2
 			for (Enemy2 enemy : enemies2) {
-				enemy.updateState(delta, currentTime, eprojectiles2);
+				enemy.updateState(delta, currentTime, player, eprojectiles2);
 			}
 
 			// Atualizações de estados dos inimigos tipo 3
 			for (Enemy3 enemy : enemies3) {
-				enemy.updateState(delta, currentTime, eprojectiles3);
+				enemy.updateState(delta, currentTime, player, eprojectiles3);
 			}
 
 			// Lançamento de novos inimigos
@@ -303,8 +298,9 @@ public class Main {
 
 			// Verificando entrada do usuário (teclado)
 			processInput(delta, currentTime, player);
-			if (GameLib.iskeyPressed(GameLib.KEY_ESCAPE))
-				this.running = false;
+			if (GameLib.iskeyPressed(GameLib.KEY_ESCAPE)) {
+				running = false;
+			}
 
 			// Desenha a cena
 			render(delta, currentTime);
@@ -351,7 +347,7 @@ public class Main {
 			enemy.render(currentTime);
 		}
 
-		// desenha Powerup
+		// desenha Powerup1
 		powerup.render();
 
 		// Desenha barra de vida
@@ -380,7 +376,7 @@ public class Main {
 						projectiles.get(free).setVX(0.0);
 						projectiles.get(free).setVY(-1.0);
 						projectiles.get(free).setState(ACTIVE);
-						if ("powerup".equals(player.getPowerupEnabled())) {
+						if (player.getPowerupEnabled() == "powerup") {
 							player.setShot(currentTime + 10);
 						} else {
 							player.setShot(currentTime + 100);
@@ -426,5 +422,4 @@ public class Main {
 
 		main.gameLoop();
 	}
-
 }

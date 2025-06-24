@@ -7,26 +7,26 @@ import java.awt.Color;
 
 public class Projectile extends Entity {
     // Atributos adicionais da classe Projectile
-    private double vx; // Velocidade na direção X do projétil
-    private double vy; // Velocidade na direção Y do projétil
+    private double VX; // Velocidade na direção X do projétil
+    private double VY; // Velocidade na direção Y do projétil
 
     // Construtor da classe Projectile
     public Projectile() {
-        super(0, 0, Main.INACTIVE, 2.0); // Chama o construtor da classe Entity com valores iniciais
-        this.vx = 0; // Inicializa a velocidade na direção X
-        this.vy = 0; // Inicializa a velocidade na direção Y
+        super(0, 0, Main.INACTIVE, 2.0); // Chama o construtor da classe Entidade com valores iniciais
+        this.VX = 0; // Inicializa a velocidade na direção X
+        this.VY = 0; // Inicializa a velocidade na direção Y
     }
 
     // Métodos getter e setter para os atributos adicionais
 
     // Método setter para a velocidade na direção X
-    public void setVX(double vx) {
-        this.vx = vx;
+    public void setVX(double VX) {
+        this.VX = VX;
     }
 
     // Método setter para a velocidade na direção Y
-    public void setVY(double vy) {
-        this.vy = vy;
+    public void setVY(double VY) {
+        this.VY = VY;
     }
 
     // Método para atualizar o estado do projétil
@@ -38,8 +38,8 @@ public class Projectile extends Entity {
                 setState(Main.INACTIVE);
             } else {
                 // Atualiza a posição do projétil com base na velocidade e no delta
-                setX(getX() + vx * delta);
-                setY(getY() + vy * delta);
+                setX(getX() + VX * delta);
+                setY(getY() + VY * delta);
             }
         }
     }

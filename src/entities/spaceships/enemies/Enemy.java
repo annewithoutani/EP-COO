@@ -12,7 +12,7 @@ public abstract class Enemy extends Entity {
     private long shoot; // Tempo do próximo disparo do inimigo
 
     // Construtor da classe Enemy
-    protected Enemy(double radius, int state) {
+    public Enemy(double radius, int state) {
         super(0, 0, state, radius); // Chama o construtor da classe Entity
     }
 
@@ -40,8 +40,7 @@ public abstract class Enemy extends Entity {
 
     // Método setter para o ângulo de movimento
     public double setAngle(double angle) {
-        this.angle = angle;
-        return this.angle;
+        return this.angle = angle;
     }
 
     // Método setter para a velocidade de rotação

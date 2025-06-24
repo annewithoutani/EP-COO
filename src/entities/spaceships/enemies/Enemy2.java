@@ -2,9 +2,11 @@ package entities.spaceships.enemies;
 
 import lib.GameLib;
 import core.Main;
+import entities.spaceships.player.Player;
 import entities.projectiles.Projectile;
 import java.awt.Color;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Enemy2 extends Enemy {
 
@@ -14,85 +16,68 @@ public class Enemy2 extends Enemy {
     }
 
     // Método para atualizar o estado do Enemy2
-    public void updateState(long delta, long currentTime, List<Projectile> eprojectiles2) {
+    public void updateState(long delta, long currentTime, Player player, ArrayList<Projectile> eprojectiles2) {
+        // Verifica se o inimigo está explodindo
         if (getState() == Main.EXPLODING) {
-            handleExplodingState(currentTime);
-            return;
+            // Se o tempo atual for maior que o tempo de fim da explosão, define o estado
+            // como INACTIVE
+            if (currentTime > getExEnd()) {
+                setState(Main.INACTIVE);
+            }
         }
+        // Verifica se o inimigo está ativo
         if (getState() == Main.ACTIVE) {
-            handleActiveState(delta, eprojectiles2);
-        }
-    }
+            // Se o inimigo sair da tela, define o estado como INACTIVE
+            if (getX() < -10 || getX() > GameLib.HEIGHT + 10) {
+                setState(Main.INACTIVE);
+            } else {
+                boolean shoot = false;
+                double y = getY();
+                // Atualiza a posição e o ângulo do inimigo
+                setX(getX() + getV() * Math.cos(getAngle()) * delta);
+                setY(getY() + getV() * Math.sin(getAngle()) * delta * -1.0);
+                setAngle(getAngle() + getRv() * delta);
 
-    private void handleExplodingState(long currentTime) {
-        if (currentTime > getExEnd()) {
-            setState(Main.INACTIVE);
-        }
-    }
+                // Define o limite da tela para mudar o comportamento do inimigo
+                double threshold = GameLib.HEIGHT * 0.30;
+                if (y < threshold && getY() >= threshold) {
+                    if (getX() < GameLib.WIDTH / 2)
+                        setRv(0.0025); // Gira o inimigo no sentido horário
+                    else
+                        setRv(-0.0025); // Gira o inimigo no sentido anti-horário
+                }
 
-    private void handleActiveState(long delta, List<Projectile> eprojectiles2) {
-        if (isOutOfScreen()) {
-            setState(Main.INACTIVE);
-            return;
-        }
-        double previousY = getY();
-        updatePositionAndAngle(delta);
-        handleThresholdCrossing(previousY);
-        boolean shoot = handleAngleAdjustments();
-        if (shoot) {
-            shootProjectiles(eprojectiles2);
-        }
-    }
+                // Verifica se o ângulo está próximo de 3 * PI e ajusta o comportamento
+                if (getRv() > 0 && Math.abs(getAngle() - 3 * Math.PI) < 0.05) {
+                    setRv(0.0);
+                    setAngle(3 * Math.PI);
+                    shoot = true;
+                }
+                // Verifica se o ângulo está próximo de 0 e ajusta o comportamento
+                if (getRv() < 0 && Math.abs(getAngle()) < 0.05) {
+                    setRv(0.0);
+                    setAngle(0.0);
+                    shoot = true;
+                }
 
-    private boolean isOutOfScreen() {
-        return getX() < -10 || getX() > GameLib.HEIGHT + 10;
-    }
-
-    private void updatePositionAndAngle(long delta) {
-        setX(getX() + getV() * Math.cos(getAngle()) * delta);
-        setY(getY() + getV() * Math.sin(getAngle()) * delta * -1.0);
-        setAngle(getAngle() + getRv() * delta);
-    }
-
-    private void handleThresholdCrossing(double previousY) {
-        double threshold = GameLib.HEIGHT * 0.30;
-        if (previousY < threshold && getY() >= threshold) {
-            if (getX() < GameLib.WIDTH / 2)
-                setRv(0.0025);
-            else
-                setRv(-0.0025);
-        }
-    }
-
-    private boolean handleAngleAdjustments() {
-        boolean shoot = false;
-        if (getRv() > 0 && Math.abs(getAngle() - 3 * Math.PI) < 0.05) {
-            setRv(0.0);
-            setAngle(3 * Math.PI);
-            shoot = true;
-        }
-        if (getRv() < 0 && Math.abs(getAngle()) < 0.05) {
-            setRv(0.0);
-            setAngle(0.0);
-            shoot = true;
-        }
-        return shoot;
-    }
-
-    private void shootProjectiles(List<Projectile> eprojectiles2) {
-        double[] angles = { Math.PI / 2 + Math.PI / 8, Math.PI / 2, Math.PI / 2 - Math.PI / 8 };
-        int[] freeArray = Main.findFreeIndex((java.util.ArrayList<? extends entities.Entity>) eprojectiles2, angles.length);
-        for (int k = 0; k < freeArray.length; k++) {
-            int free = freeArray[k];
-            if (free < eprojectiles2.size()) {
-                double a = angles[k] + Math.random() * Math.PI / 6 - Math.PI / 12;
-                double vx = Math.cos(a);
-                double vy = Math.sin(a);
-                eprojectiles2.get(free).setX(getX());
-                eprojectiles2.get(free).setY(getY());
-                eprojectiles2.get(free).setVX(vx * 0.20);
-                eprojectiles2.get(free).setVY(vy * 0.20);
-                eprojectiles2.get(free).setState(Main.ACTIVE);
+                // Se for hora de atirar, dispara projéteis em várias direções
+                if (shoot) {
+                    double[] angles = { Math.PI / 2 + Math.PI / 8, Math.PI / 2, Math.PI / 2 - Math.PI / 8 };
+                    int[] freeArray = Main.findFreeIndex(eprojectiles2, angles.length);
+                    for (int k = 0; k < freeArray.length; k++) {
+                        int free = freeArray[k];
+                        if (free < eprojectiles2.size()) {
+                            double a = angles[k] + Math.random() * Math.PI / 6 - Math.PI / 12;
+                            double vx = Math.cos(a);
+                            double vy = Math.sin(a);
+                            eprojectiles2.get(free).setX(getX());
+                            eprojectiles2.get(free).setY(getY());
+                            eprojectiles2.get(free).setVX(vx * 0.20);
+                            eprojectiles2.get(free).setVY(vy * 0.20);
+                            eprojectiles2.get(free).setState(Main.ACTIVE);
+                        }
+                    }
+                }
             }
         }
     }

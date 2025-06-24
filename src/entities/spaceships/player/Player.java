@@ -28,7 +28,7 @@ public class Player extends Entity {
 
     // Construtor da classe Player
     public Player(int initialHp) {
-        super((double) GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90, Main.ACTIVE, 12.00); // Chama o construtor da classe Entity
+        super(GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90, Main.ACTIVE, 12.00); // Chama o construtor da classe Entity
         VX = 0.25; // Inicializa a velocidade na direção X
         VY = 0.25; // Inicializa a velocidade na direção Y
         this.shot = System.currentTimeMillis(); // Inicializa o tempo do próximo disparo
@@ -44,14 +44,14 @@ public class Player extends Entity {
     // Método para atualizar o estado do jogador
     public void updateState(long currentTime) {
         // Verifica se o jogador está explodindo
-        if (getState() == Main.EXPLODING && currentTime > exEnd) {
+        if (getState() == Main.EXPLODING) {
             // Se o tempo atual for maior que o tempo de fim da explosão, restaura o jogador
+            if (currentTime > exEnd) {
                 setState(Main.ACTIVE); // Define o estado do jogador como ativo
                 hpbar.setHp(hpbar.getInitialHp()); // Restaura a vida ao valor inicial
-                setX((double) GameLib.WIDTH / 2); // Reposiciona o jogador na coordenada inicial X
+                setX(GameLib.WIDTH / 2); // Reposiciona o jogador na coordenada inicial X
                 setY(GameLib.HEIGHT * 0.90); // Reposiciona o jogador na coordenada inicial Y
-                this.exEnd = 0; // Reseta o tempo de fim da explosão
-                this.exStart = 0; // Reseta o tempo de início da explosão
+            }
         }
         // Verifica se o efeito de piscagem terminou
         if (isFlashing && currentTime > flashEndTime) {
@@ -123,8 +123,7 @@ public class Player extends Entity {
             ArrayList<Enemy1> enemies1,
             ArrayList<Enemy2> enemies2,
             ArrayList<Enemy3> enemies3,
-            Powerup1 powerup1,
-            Powerup2 powerup2,
+            Powerup1 powerup,
             long currentTime) {
         // Verifica se o jogador está ativo
         if (getState() == Main.ACTIVE) {
@@ -236,23 +235,13 @@ public class Player extends Entity {
                 }
             }
 
-            // Verifica colisões com o primeiro power-up
-            if (powerup1.getState() == Main.ACTIVE) {
-                double dx = Powerup1.getX() - getX();
-                double dy = Powerup1.getY() - getY();
+            // Verifica colisões com o power-up
+            if (powerup.getState() == Main.ACTIVE) {
+                double dx = powerup.getX() - getX();
+                double dy = powerup.getY() - getY();
                 double distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < (Powerup1.getRadius() + getRadius()) * 0.8) {
-                    return "Powerup1";
-                }
-            }
-            
-            // Verifica colisões com o segundo power-up
-            if (powerup2.getState() == Main.ACTIVE) {
-                double dx = Powerup2.getX() - getX();
-                double dy = Powerup2.getY() - getY();
-                double distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < (Powerup2.getRadius() + getRadius()) * 0.8) {
-                    return "Powerup2";
+                if (distance < (powerup.getRadius() + getRadius()) * 0.8) {
+                    return "powerup";
                 }
             }
 

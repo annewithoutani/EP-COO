@@ -2,15 +2,15 @@ package entities;
 
 public abstract class Entity {
     // Atributos da classe Entity
-    private static double x; // Coordenada X da entidade
-    private static double y; // Coordenada Y da entidade
-    protected int state; // Estado atual da entidade (INACTIVE, ACTIVE, EXPLODING)
-    protected static double radius; // Raio da entidade (usado para colisões e renderização)
+    public double X; // Coordenada X da entidade
+    public double Y; // Coordenada Y da entidade
+    public int state; // Estado atual da entidade (INACTIVE, ACTIVE, EXPLODING)
+    public double radius; // Raio da entidade (usado para colisões e renderização)
 
     // Construtor da classe Entity
-    protected Entity(double x, double y, int state, double radius) {
-        this.x = x; // Inicializa a coordenada X
-        this.y = y; // Inicializa a coordenada Y
+    protected Entity(double X, double Y, int state, double radius) {
+        this.X = X; // Inicializa a coordenada X
+        this.Y = Y; // Inicializa a coordenada Y
         this.state = state; // Inicializa o estado
         this.radius = radius; // Inicializa o raio
     }
@@ -26,27 +26,27 @@ public abstract class Entity {
     }
 
     // Método getter para a coordenada X
-    public static double getX() {
-        return x; // Retorna a coordenada X da entidade
+    public double getX() {
+        return X; // Retorna a coordenada X da entidade
     }
 
     // Método setter para a coordenada X
-    public void setX(double x) {
-        this.x = x; // Define a coordenada X da entidade
+    public void setX(double X) {
+        this.X = X; // Define a coordenada X da entidade
     }
 
     // Método getter para a coordenada Y
-    public static double getY() {
-        return y; // Retorna a coordenada Y da entidade
+    public double getY() {
+        return Y; // Retorna a coordenada Y da entidade
     }
 
     // Método setter para a coordenada Y
-    public void setY(double y) {
-        this.y = y; // Define a coordenada Y da entidade
+    public void setY(double Y) {
+        this.Y = Y; // Define a coordenada Y da entidade
     }
 
     // Método getter para o raio
-    public static double getRadius() {
+    public double getRadius() {
         return radius; // Retorna o raio da entidade
     }
 
