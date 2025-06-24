@@ -1,9 +1,10 @@
+package core;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
 import javax.swing.JFrame;
 
 /***********************************************************************/

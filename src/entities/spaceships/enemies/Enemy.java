@@ -1,4 +1,8 @@
-public abstract class Enemy extends Entidade {
+package entities.spaceships.enemies;
+
+import entities.Entity;
+
+public abstract class Enemy extends Entity {
     // Atributos adicionais da classe Enemy
     private double v; // Velocidade do inimigo
     private double angle; // Ângulo de movimento do inimigo
@@ -8,8 +12,8 @@ public abstract class Enemy extends Entidade {
     private long shoot; // Tempo do próximo disparo do inimigo
 
     // Construtor da classe Enemy
-    public Enemy(double radius, int state) {
-        super(0, 0, state, radius); // Chama o construtor da classe Entidade
+    protected Enemy(double radius, int state) {
+        super(0, 0, state, radius); // Chama o construtor da classe Entity
     }
 
     // Métodos getter e setter para os atributos adicionais
@@ -36,7 +40,8 @@ public abstract class Enemy extends Entidade {
 
     // Método setter para o ângulo de movimento
     public double setAngle(double angle) {
-        return this.angle = angle;
+        this.angle = angle;
+        return this.angle;
     }
 
     // Método setter para a velocidade de rotação

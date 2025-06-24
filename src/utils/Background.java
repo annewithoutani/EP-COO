@@ -1,11 +1,14 @@
+package utils;
+
+import core.GameLib;
 import java.awt.Color;
 
 public class Background {
     // Atributos da classe Background
     private double speed; // Velocidade de movimento do fundo
     private double count; // Contador para calcular a posição do fundo
-    private double[] X; // Array de posições X das estrelas no fundo
-    private double[] Y; // Array de posições Y das estrelas no fundo
+    private double[] x; // Array de posições X das estrelas no fundo
+    private double[] y; // Array de posições Y das estrelas no fundo
     private int size; // Número de estrelas no fundo
     private int w; // Largura das estrelas
 
@@ -15,13 +18,13 @@ public class Background {
         this.speed = speed; // Inicializa a velocidade
         this.size = size; // Inicializa o número de estrelas
         this.w = w; // Inicializa a largura das estrelas
-        X = new double[size]; // Inicializa o array de posições X
-        Y = new double[size]; // Inicializa o array de posições Y
+        x = new double[size]; // Inicializa o array de posições X
+        y = new double[size]; // Inicializa o array de posições Y
 
         // Define posições iniciais aleatórias para as estrelas
         for (int i = 0; i < size; i++) {
-            X[i] = Math.random() * GameLib.WIDTH;
-            Y[i] = Math.random() * GameLib.HEIGHT;
+            x[i] = Math.random() * GameLib.WIDTH;
+            y[i] = Math.random() * GameLib.HEIGHT;
         }
     }
 
@@ -32,8 +35,8 @@ public class Background {
 
         // Atualiza a posição das estrelas e as desenha na tela
         for (int i = 0; i < size; i++) {
-            double newY = (Y[i] + count) % GameLib.HEIGHT;
-            GameLib.fillRect(X[i], newY, w, w);
+            double newY = (y[i] + count) % GameLib.HEIGHT;
+            GameLib.fillRect(x[i], newY, w, w);
         }
     }
 
@@ -44,8 +47,8 @@ public class Background {
 
         // Atualiza a posição das estrelas e as desenha na tela
         for (int i = 0; i < size; i++) {
-            double newY = (Y[i] + count) % GameLib.HEIGHT;
-            GameLib.fillRect(X[i], newY, w, w);
+            double newY = (y[i] + count) % GameLib.HEIGHT;
+            GameLib.fillRect(x[i], newY, w, w);
         }
     }
 }

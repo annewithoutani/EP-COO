@@ -1,8 +1,11 @@
+package utils;
+
+import core.GameLib;
 import java.awt.Color;
 
 public class Hp {
     private int hp; // Pontos de vida atuais do jogador
-    private int initialHp; // Pontos de vida iniciais do jogador
+    private final int initialHp; // Pontos de vida iniciais do jogador
 
     // Construtor da classe Hp
     public Hp(int initialHp) {

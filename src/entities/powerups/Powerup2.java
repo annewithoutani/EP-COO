@@ -1,18 +1,23 @@
+package entities.powerups;
+
+import core.GameLib;
+import core.Main;
+import entities.Entity;
 import java.awt.Color;
 
-public class Powerup extends Entidade {
+public class Powerup2 extends Entity {
 
-    // Construtor da classe Powerup
-    public Powerup() {
-        // Chama o construtor da classe Entidade com valores iniciais específicos para o
+    // Construtor da classe Powerup2
+    public Powerup2() {
+        // Chama o construtor da classe Entity com valores iniciais específicos para o
         // power-up
-        super(GameLib.WIDTH / 2, -10.0, Main.INACTIVE, 10.0); // Ajuste o raio conforme necessário
+        super((double) GameLib.WIDTH / 2, -10.0, Main.INACTIVE, 10.0); // Ajuste o raio conforme necessário
     }
 
     // Método para posicionar o power-up na tela
-    public void place(long currentTime) {
-        setX(GameLib.WIDTH / 2); // Sempre no meio da tela
-        setY(GameLib.HEIGHT / 2 + 200); // Posiciona o power-up fora da tela inicialmente
+    public void place() {
+        setX((double) GameLib.WIDTH / 2); // Sempre no meio da tela
+        setY((double) GameLib.HEIGHT / 2 + 200); // Posiciona o power-up fora da tela inicialmente
         setState(Main.ACTIVE); // Define o estado do power-up como ativo
     }
 
