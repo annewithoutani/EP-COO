@@ -1,6 +1,6 @@
 package entities.spaceships.player;
 
-import core.GameLib;
+import lib.GameLib;
 import core.Main;
 import entities.Entity;
 import entities.powerups.Powerup1;

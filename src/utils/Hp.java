@@ -1,6 +1,6 @@
 package utils;
 
-import core.GameLib;
+import lib.GameLib;
 import java.awt.Color;
 
 public class Hp {

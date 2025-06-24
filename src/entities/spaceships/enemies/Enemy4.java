@@ -1,6 +1,6 @@
 package entities.spaceships.enemies;
 
-import core.GameLib;
+import lib.GameLib;
 import core.Main;
 import entities.projectiles.Projectile;
 import java.awt.Color;

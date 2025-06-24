@@ -1,5 +1,6 @@
 package core;
 
+import lib.GameLib;
 import java.util.ArrayList;
 import utils.*;
 
@@ -9,6 +10,9 @@ import entities.spaceships.enemies.*;
 import entities.projectiles.Projectile;
 import entities.powerups.*;
 
+// Para compilar e rodar o programa, utilize os seguintes comandos:
+// 1°: javac -d bin -sourcepath src $(find src -name "*.java")
+// 2°: java -cp bin core.Main
 public class Main {
 
 	// Constantes para os estados das entidades

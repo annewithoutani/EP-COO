@@ -1,6 +1,6 @@
 package entities.powerups;
 
-import core.GameLib;
+import lib.GameLib;
 import core.Main;
 import entities.Entity;
 import java.awt.Color;
