@@ -1,8 +1,20 @@
 package entities.spaceships.enemies;
 
-import entities.Entity;
+import lib.GameLib;
+import core.Main;
+import utils.Health;
 
-public abstract class Enemy extends Entity {
+import entities.spaceships.player.Player;
+
+import entities.projectiles.Projectile;
+import entities.spaceships.Spaceship;
+import strategies.movement.PlayerMovement;
+import strategies.shooting.PlayerShooting;
+
+import java.awt.Color;
+import java.util.ArrayList;
+
+public abstract class Enemy extends Spaceship {
     // Atributos adicionais da classe Enemy
     private double v; // Velocidade do inimigo
     private double angle; // Ângulo de movimento do inimigo
@@ -16,7 +28,51 @@ public abstract class Enemy extends Entity {
         super(0, 0, state, radius); // Chama o construtor da classe Entity
     }
 
-    // Métodos getter e setter para os atributos adicionais
+    // --- TEMPLATE METHOD PARA ATUALIZAÇÃO --- //
+    public final void update(long delta, long currentTime, Player player, ArrayList<Projectile> enemyProjectiles) {
+        if (getState() == Main.EXPLODING) {
+            if (currentTime > getExEnd()) {
+                setState(Main.INACTIVE);
+            }
+        } else if (getState() == Main.ACTIVE) {
+            if (isOffScreen()) {
+                setState(Main.INACTIVE);
+            } else {
+                // Delega o comportamento específico para as subclasses
+                executeMovement(delta, currentTime);
+                executeShooting(currentTime, player, enemyProjectiles);
+            }
+        }
+    }
+
+    // --- TEMPLATE METHOD PARA RENDERIZAÇÃO --- //
+    public final void render(long currentTime) {
+        if (getState() == Main.EXPLODING) {
+            double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
+            GameLib.drawExplosion(getX(), getY(), alpha);
+        } else if (getState() == Main.ACTIVE) {
+            // Delega o desenho para a subclasse
+            draw();
+        }
+    }
+
+    // --- MÉTODOS ABSTRATOS QUE AS SUBCLASSES DEVEM IMPLEMENTAR --- //
+
+    /** Define a lógica de movimento única para este tipo de inimigo. */
+    public abstract void executeMovement(long delta, long currentTime);
+
+    /** Define a lógica de tiro única para este tipo de inimigo. */
+    public abstract void executeShooting(long currentTime, Player player, ArrayList<Projectile> enemyProjectiles);
+
+    /** Define como o inimigo deve ser desenhado na tela. */
+    public abstract void draw();
+
+    /** Verifica se o inimigo saiu da tela. Pode ser sobrescrito por chefes. */
+    public boolean isOffScreen() {
+        return (getY() > GameLib.HEIGHT + 10) || (getX() < -10) || (getX() > GameLib.WIDTH + 10);
+    }
+
+    // --- GETTERS E SETTERS PARA OS ATRIBUTOS --- //
 
     // Método setter para o tempo de início da explosão
     public void setExStart(double exStart) {

@@ -8,17 +8,17 @@ import java.awt.Color;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Enemy4 extends Enemy {
+public class Boss2 extends Enemy {
 
     private boolean movingRight; // Indica se o inimigo está se movendo para a direita
 
-    // Construtor da classe Enemy4
-    public Enemy4() {
+    // Construtor da classe Boss2
+    public Boss2() {
         super(11.00, Main.INACTIVE); // Chama o construtor da classe Enemy com raio 11.00 e estado INACTIVE
         movingRight = true; // Inicia a movimentação para a direita
     }
 
-    // Método para atualizar o estado do Enemy4
+    // Método para atualizar o estado do Boss2
     public void updateState(long delta, long currentTime, Player player, ArrayList<Projectile> eprojectiles4) {
         // Verifica se o inimigo está explodindo
         if (getState() == Main.EXPLODING) {
@@ -66,7 +66,7 @@ public class Enemy4 extends Enemy {
         }
     }
 
-    // Método para renderizar o Enemy4
+    // Método para renderizar o Boss2
     public void render(long currentTime) {
         // Renderiza a explosão se o inimigo estiver explodindo
         if (getState() == Main.EXPLODING) {

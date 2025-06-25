@@ -2,10 +2,11 @@ package entities.spaceships.enemies;
 
 import lib.GameLib;
 import core.Main;
+
 import entities.spaceships.player.Player;
 import entities.projectiles.Projectile;
+
 import java.awt.Color;
-import java.util.List;
 import java.util.ArrayList;
 
 public class Enemy1 extends Enemy {

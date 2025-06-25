@@ -1,57 +1,47 @@
 package entities;
 
+import core.Main;
+import strategies.IMovement;
+
 public abstract class Entity {
-    // Atributos da classe Entity
-    public double X; // Coordenada X da entidade
-    public double Y; // Coordenada Y da entidade
-    public int state; // Estado atual da entidade (INACTIVE, ACTIVE, EXPLODING)
-    public double radius; // Raio da entidade (usado para colisões e renderização)
+    protected double X, Y, radius;
+    protected int state;
+    protected IMovement movement;
 
-    // Construtor da classe Entity
-    protected Entity(double X, double Y, int state, double radius) {
-        this.X = X; // Inicializa a coordenada X
-        this.Y = Y; // Inicializa a coordenada Y
-        this.state = state; // Inicializa o estado
-        this.radius = radius; // Inicializa o raio
+    public Entity(double X, double Y, int state, double radius) {
+        this.X = X;
+        this.Y = Y;
+        this.state = state;
+        this.radius = radius;
+        this.movement = null;
     }
 
-    // Método getter para o estado
-    public int getState() {
-        return state; // Retorna o estado atual da entidade
+    // O método de atualização principal delega o movimento.
+    public void update(long delta) {
+        if (this.state == Main.ACTIVE && this.movement != null) {
+            this.movement.move(this, delta);
+        }
     }
 
-    // Método setter para o estado
-    public void setState(int state) {
-        this.state = state; // Define o estado atual da entidade
+    // Faz a verificação do estado e chama o método draw da subclasse
+    public final void render(long currentTime){
+        if(this.state == Main.ACTIVE || this.state == Main.EXPLODING){
+            draw(currentTime);
+        }
     }
 
-    // Método getter para a coordenada X
-    public double getX() {
-        return X; // Retorna a coordenada X da entidade
+    public abstract void draw(long currentTime);
+    
+    public void setMovement(IMovement strategy) {
+        this.movement = strategy;
     }
 
-    // Método setter para a coordenada X
-    public void setX(double X) {
-        this.X = X; // Define a coordenada X da entidade
-    }
-
-    // Método getter para a coordenada Y
-    public double getY() {
-        return Y; // Retorna a coordenada Y da entidade
-    }
-
-    // Método setter para a coordenada Y
-    public void setY(double Y) {
-        this.Y = Y; // Define a coordenada Y da entidade
-    }
-
-    // Método getter para o raio
-    public double getRadius() {
-        return radius; // Retorna o raio da entidade
-    }
-
-    // Método setter para o raio
-    public void setRadius(double radius) {
-        this.radius = radius; // Define o raio da entidade
-    }
+    // Getters e Setters existentes
+    public int getState() { return state; }
+    public void setState(int state) { this.state = state; }
+    public double getX() { return X; }
+    public void setX(double X) { this.X = X; }
+    public double getY() { return Y; }
+    public void setY(double Y) { this.Y = Y; }
+    public double getRadius() { return radius; }
 }

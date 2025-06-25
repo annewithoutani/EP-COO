@@ -1,6 +1,7 @@
 package core;
 
 import lib.GameLib;
+import core.CollisionManager;
 import java.util.ArrayList;
 import utils.*;
 
@@ -26,9 +27,10 @@ public class Main {
 	long currentTime = System.currentTimeMillis(); // Tempo atual
 	private long nextE1; // Tempo do próximo spawn de Enemy1
 	private long nextE2; // Tempo do próximo spawn de Enemy2
-	private double nextE3; // Tempo do próximo spawn de Enemy3
-	private int e2Count, e3Count; // Contadores para spawns de Enemy2 e Enemy3
-	private double e2SpawnX, e3SpawnX; // Coordenadas de spawn de Enemy2 e Enemy3
+	private double nextB1; // Tempo do próximo spawn de Boss1
+	private double nextB2; // Tempo do próximo spawn de Boss2
+	private int e2Count, b1Count, b2Count; // Contadores para spawns de Enemy2, Boss1 e Boss2
+	private double e2SpawnX, b1SpawnX, b1SpawnX; // Coordenadas de spawn de Enemy2, Boss1 e Boss2
 
 	private Player player; // Instância do jogador
 	private Background background1; // Primeira camada do fundo
@@ -43,7 +45,8 @@ public class Main {
 	private ArrayList<Projectile> eprojectiles3;
 	private ArrayList<Enemy1> enemies1;
 	private ArrayList<Enemy2> enemies2;
-	private ArrayList<Enemy3> enemies3;
+	private ArrayList<Boss1> boss1;
+	private ArrayList<Boss2> boss2;
 
 	// Construtor da classe Main
 	public Main() {
@@ -68,28 +71,40 @@ public class Main {
 			eprojectiles2.add(new Projectile()); // Adiciona 2000 projéteis à lista
 		}
 
-		// Inicializa a lista de projéteis do inimigo tipo 3
+		// Inicializa a lista de projéteis do boss do tipo 1
 		eprojectiles3 = new ArrayList<Projectile>();
 		for (int i = 0; i < 2000; i++) {
 			eprojectiles3.add(new Projectile()); // Adiciona 2000 projéteis à lista
 		}
 
-		// Inicializa a lista de inimigos do tipo 1
+		// Inicializa a lista de projéteis do boss do tipo 2
+		eprojectiles4 = new ArrayList<Projectile>();
+		for (int i = 0; i < 2000; i++) {
+			eprojectiles4.add(new Projectile()); // Adiciona 2000 projéteis à lista
+		}
+
+		// Inicializa a lista de inimigos tipo 1
 		enemies1 = new ArrayList<Enemy1>();
 		for (int i = 0; i < 10; i++) {
-			enemies1.add(new Enemy1()); // Adiciona 10 inimigos do tipo 1 à lista
+			enemies1.add(new Enemy1()); // Adiciona 10 inimigos tipo 1 à lista
 		}
 
-		// Inicializa a lista de inimigos do tipo 2
+		// Inicializa a lista de inimigos tipo 2
 		enemies2 = new ArrayList<Enemy2>();
 		for (int i = 0; i < 10; i++) {
-			enemies2.add(new Enemy2()); // Adiciona 10 inimigos do tipo 2 à lista
+			enemies2.add(new Enemy2()); // Adiciona 10 inimigos tipo 2 à lista
 		}
 
-		// Inicializa a lista de inimigos do tipo 3
-		enemies3 = new ArrayList<Enemy3>();
+		// Inicializa a lista de boss do tipo 1
+		boss1 = new ArrayList<Boss1>();
 		for (int i = 0; i < 5; i++) {
-			enemies3.add(new Enemy3()); // Adiciona 5 inimigos do tipo 3 à lista
+			boss1.add(new Boss1()); // Adiciona 5 boss do tipo 1 à lista
+		}
+
+		// Inicializa a lista de boss do tipo 2
+		boss2 = new ArrayList<Boss2>();
+		for (int i = 0; i < 5; i++) {
+			boss2.add(new Boss2()); // Adiciona 5 boss do tipo 2 à lista
 		}
 
 		// Inicializa o power-up
@@ -102,7 +117,8 @@ public class Main {
 		currentTime = System.currentTimeMillis(); // Obtém o tempo atual em milissegundos
 		nextE1 = currentTime + 2000; // Define o tempo do próximo spawn de Enemy1 para 2 segundos no futuro
 		nextE2 = currentTime + 7000; // Define o tempo do próximo spawn de Enemy2 para 7 segundos no futuro
-		nextE3 = currentTime + 5000; // Define o tempo do próximo spawn de Enemy3 para 5 segundos no futuro
+		nextB1 = currentTime + 5000; // Define o tempo do próximo spawn de Boss1 para 5 segundos no futuro
+		nextB2 = currentTime + 5000; // Define o tempo do próximo spawn de Boss2 para 5 segundos no futuro
 		nextPowerupTime = currentTime + 30000; // Define o tempo do próximo spawn de power-up para 30 segundos no futuro
 		e2Count = 0; // Inicializa o contador de Enemy2
 		e2SpawnX = GameLib.WIDTH * 0.20; // Define a posição de spawn inicial de Enemy2
@@ -184,29 +200,57 @@ public class Main {
 			}
 		}
 
-		// Lançando Enemy3
-		if (currentTime > nextE3) {
-			// Encontra um índice livre na lista de inimigos do tipo 3
-			int free = findFreeIndex(enemies3);
-			if (free < enemies3.size() && free < 5) {
+		// Lançando Boss1
+		if (currentTime > nextB1) {
+			// Encontra um índice livre na lista de boss do tipo 1
+			int free = findFreeIndex(boss1);
+			if (free < boss1.size() && free < 5) {
 				// Inicializa os atributos do novo inimigo
-				enemies3.get(free).setX(e3SpawnX); // Posição X predefinida
-				enemies3.get(free).setY(-10.0); // Posição Y acima da tela
-				enemies3.get(free).setV(0.50); // Velocidade fixa
-				enemies3.get(free).setAngle(3 * Math.PI / 2); // Ângulo de movimento para baixo
-				enemies3.get(free).setRv(0.0); // Velocidade de rotação zero
-				enemies3.get(free).setState(ACTIVE); // Define o estado como ativo
+				boss1.get(free).setX(b1SpawnX); // Posição X predefinida
+				boss1.get(free).setY(-10.0); // Posição Y acima da tela
+				boss1.get(free).setV(0.50); // Velocidade fixa
+				boss1.get(free).setAngle(3 * Math.PI / 2); // Ângulo de movimento para baixo
+				boss1.get(free).setRv(0.0); // Velocidade de rotação zero
+				boss1.get(free).setState(ACTIVE); // Define o estado como ativo
 
-				e3Count++; // Incrementa o contador de spawns de Enemy3
+				b1Count++; // Incrementa o contador de spawns de Boss1
 
-				// Define o tempo do próximo spawn de Enemy3
-				if (e3Count < 5) {
-					nextE3 = currentTime + 500;
+				// Define o tempo do próximo spawn de Boss1
+				if (b1Count < 5) {
+					nextB1 = currentTime + 500;
 				} else {
-					e3Count = 0; // Reseta o contador
+					b1Count = 0; // Reseta o contador
 					// Alterna a posição de spawn entre a esquerda e a direita
-					e3SpawnX = Math.random() > 0.5 ? GameLib.WIDTH * 0.2 : GameLib.WIDTH * 0.8;
-					nextE3 = (long) (currentTime + 3000 + Math.random() * 4000); // Tempo aleatório entre 3 e 7 segundos
+					b1SpawnX = Math.random() > 0.5 ? GameLib.WIDTH * 0.2 : GameLib.WIDTH * 0.8;
+					nextB1 = (long) (currentTime + 3000 + Math.random() * 4000); // Tempo aleatório entre 3 e 7 segundos
+				}
+			}
+		}
+	}
+
+		// Lançando Boss2
+		if (currentTime > nextB2) {
+			// Encontra um índice livre na lista de boss do tipo 2
+			int free = findFreeIndex(boss2);
+			if (free < boss2.size() && free < 5) {
+				// Inicializa os atributos do novo inimigo
+				boss2.get(free).setX(b1SpawnX); // Posição X predefinida
+				boss2.get(free).setY(-10.0); // Posição Y acima da tela
+				boss2.get(free).setV(0.50); // Velocidade fixa
+				boss2.get(free).setAngle(3 * Math.PI / 2); // Ângulo de movimento para baixo
+				boss2.get(free).setRv(0.0); // Velocidade de rotação zero
+				boss2.get(free).setState(ACTIVE); // Define o estado como ativo
+
+				b2Count++; // Incrementa o contador de spawns de Boss2
+
+				// Define o tempo do próximo spawn de Boss2
+				if (b2Count < 5) {
+					nextB2 = currentTime + 500;
+				} else {
+					b2Count = 0; // Reseta o contador
+					// Alterna a posição de spawn entre a esquerda e a direita
+					b2SpawnX = Math.random() > 0.5 ? GameLib.WIDTH * 0.2 : GameLib.WIDTH * 0.8;
+					nextB2 = (long) (currentTime + 3000 + Math.random() * 4000); // Tempo aleatório entre 3 e 7 segundos
 				}
 			}
 		}
@@ -236,8 +280,8 @@ public class Main {
 			currentTime = System.currentTimeMillis();
 
 			// Verificação de colisões
-			String collisionStatus = player.checkCollisions(projectiles, eprojectiles1, eprojectiles2, eprojectiles3,
-					enemies1, enemies2, enemies3, powerup, currentTime);
+			String collisionStatus = player.checkCollisions(projectiles, eprojectiles1, eprojectiles2, eprojectiles3, eprojectiles4,
+					enemies1, enemies2, boss1, boss2, powerup, currentTime);
 			// Se houve uma colisão com um projétil inimigo, atualiza a barra de vida
 			if ("hit".equals(collisionStatus)) {
 				player.hpbar.renderHP();
@@ -267,8 +311,13 @@ public class Main {
 				eprojectile.updateState(delta);
 			}
 
-			// Atualizações de estados dos projéteis do inimigo tipo 3
+			// Atualizações de estados dos projéteis do boss do tipo 1
 			for (Projectile eprojectile : eprojectiles3) {
+				eprojectile.updateState(delta);
+			}
+
+			// Atualizações de estados dos projéteis do boss do tipo 2
+			for (Projectile eprojectile : eprojectiles4) {
 				eprojectile.updateState(delta);
 			}
 
@@ -282,9 +331,14 @@ public class Main {
 				enemy.updateState(delta, currentTime, player, eprojectiles2);
 			}
 
-			// Atualizações de estados dos inimigos tipo 3
-			for (Enemy3 enemy : enemies3) {
+			// Atualizações de estados dos boss do tipo 1
+			for (Boss1 enemy : boss1) {
 				enemy.updateState(delta, currentTime, player, eprojectiles3);
+			}
+
+			// Atualizações de estados dos boss do tipo 2
+			for (Boss2 enemy : boss2) {
+				enemy.updateState(delta, currentTime, player, eprojectiles4);
 			}
 
 			// Lançamento de novos inimigos
@@ -299,7 +353,7 @@ public class Main {
 			// Verificando entrada do usuário (teclado)
 			processInput(delta, currentTime, player);
 			if (GameLib.iskeyPressed(GameLib.KEY_ESCAPE)) {
-				running = false;
+				System.exit(0);
 			}
 
 			// Desenha a cena
@@ -343,7 +397,10 @@ public class Main {
 		for (Enemy2 enemy : enemies2) {
 			enemy.render(currentTime);
 		}
-		for (Enemy3 enemy : enemies3) {
+		for (Boss1 enemy : boss1) {
+			enemy.render(currentTime);
+		}
+		for (Boss2 enemy : boss2) {
 			enemy.render(currentTime);
 		}
 
@@ -355,45 +412,6 @@ public class Main {
 
 		// Mostra a tela atualizada
 		GameLib.display();
-	}
-
-	public void processInput(long delta, long currentTime, Player player) {
-		if (player.getState() == ACTIVE) {
-			if (GameLib.iskeyPressed(GameLib.KEY_UP))
-				player.setY(player.getY() - delta * player.getVY());
-			if (GameLib.iskeyPressed(GameLib.KEY_DOWN))
-				player.setY(player.getY() + delta * player.getVY());
-			if (GameLib.iskeyPressed(GameLib.KEY_LEFT))
-				player.setX(player.getX() - delta * player.getVX());
-			if (GameLib.iskeyPressed(GameLib.KEY_RIGHT))
-				player.setX(player.getX() + delta * player.getVX());
-			if (GameLib.iskeyPressed(GameLib.KEY_CONTROL)) {
-				if (currentTime > player.getShot()) {
-					int free = findFreeIndex(projectiles);
-					if (free < projectiles.size()) {
-						projectiles.get(free).setX(player.getX());
-						projectiles.get(free).setY(player.getY() - 2 * player.getRadius());
-						projectiles.get(free).setVX(0.0);
-						projectiles.get(free).setVY(-1.0);
-						projectiles.get(free).setState(ACTIVE);
-						if (player.getPowerupEnabled() == "powerup") {
-							player.setShot(currentTime + 10);
-						} else {
-							player.setShot(currentTime + 100);
-						}
-					}
-				}
-			}
-		}
-
-		if (player.getX() < 0.0)
-			player.setX(0.0);
-		if (player.getX() >= GameLib.WIDTH)
-			player.setX(GameLib.WIDTH - 1);
-		if (player.getY() < 25.0)
-			player.setY(25.0);
-		if (player.getY() >= GameLib.HEIGHT)
-			player.setY(GameLib.HEIGHT - 1);
 	}
 
 	public static int findFreeIndex(ArrayList<? extends Entity> entidades) {
