@@ -16,8 +16,10 @@ public abstract class Entity {
         this.movement = null;
     }
 
-    // O método de atualização principal delega o movimento.
-    public void update(long delta) {
+    // O método de atualização principal
+    // 1. delega o movimento.
+    // 2. atualiza o estado da entidade
+    public void move(long delta) {
         if (this.state == Main.ACTIVE && this.movement != null) {
             this.movement.move(this, delta);
         }

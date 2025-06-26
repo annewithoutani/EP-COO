@@ -8,41 +8,29 @@ import lib.GameLib;
 import strategies.IShooting;
 import java.util.ArrayList;
 
-public class PlayerShooting implements IShooting {
+public class Boss1Shooting implements IShooting {
     private long nextShot = 0;
     private ArrayList<Projectile> projectiles;
 
     // A estratégia precisa saber onde encontrar os projéteis
-    public PlayerShooting(ArrayList<Projectile> projectiles) {
+    public Boss1Shooting(ArrayList<Projectile> projectiles) {
         this.projectiles = projectiles;
     }
 
     @Override
-    public void shoot(Spaceship self, long currentTime) {
-        Player player = (Player) self;
-        if (player.getState() != Main.ACTIVE) return;
-        
+    public void shoot(Spaceship self, long currentTime, Player player, ArrayList<Projectile> projectiles) {        
         // Lógica de tiro
-        if (GameLib.iskeyPressed(GameLib.KEY_CONTROL)) {
-            if (currentTime > player.getShot()) {
-                int free = Main.findFreeIndex(this.projectiles); //
-                if (free < this.projectiles.size()) {
-                    Projectile p = this.projectiles.get(free);
-                    p.setX(player.getX()); //
-                    p.setY(player.getY() - 2 * player.getRadius()); //
-                    p.setVX(0.0); //
-                    p.setVY(-1.0); //
-                    p.setState(Main.ACTIVE); //
-                    
-                    // A frequência de tiro é controlada aqui dentro.
-                    nextShot = currentTime + 100;
-
-                    if (player.powerup1Enabled()) {player.setShot(currentTime + 10)}
-
-                    else if (player.powerup2Enabled()){player.setShot(currentTime + 55)}
-
-                    else {player.setShot(currentTime + 100)}
-                }
+        if (currentTime > self.getShoot() && self.getY() < player.getY()) {
+            int free = Main.findFreeIndex(projectiles);
+            if (free < projectiles.size()) {
+                Projectile p = projectiles.get(free);
+                p.setX(self.getX());
+                p.setY(self.getY());
+                p.setVX(0.0);
+                p.setVY(0.35); // Tiro reto para baixo
+                p.setState(Main.ACTIVE);
+                
+                self.setShoot(currentTime + 150); // Define o tempo para o próximo disparo
             }
         }
     }

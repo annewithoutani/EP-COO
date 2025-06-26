@@ -10,6 +10,8 @@ import entities.spaceships.player.Player;
 import entities.spaceships.enemies.*;
 import entities.projectiles.Projectile;
 import entities.powerups.*;
+import strategies.shooting.*;
+import strategies.movement.*;
 
 // Para compilar e rodar o programa, utilize os seguintes comandos:
 // 1°: javac -d bin -sourcepath src $(find src -name "*.java")
@@ -17,115 +19,57 @@ import entities.powerups.*;
 
 public class Main {
 
-	// Constantes para os estados das entidades
+	// ------------------- CONSTANTES ------------------- //
 	public static final int INACTIVE = 0;
 	public static final int ACTIVE = 1;
 	public static final int EXPLODING = 2;
 
-	boolean running = true; // Flag para indicar se o jogo está em execução
-	long delta; // Tempo entre frames
-	long currentTime = System.currentTimeMillis(); // Tempo atual
-	private long nextE1; // Tempo do próximo spawn de Enemy1
-	private long nextE2; // Tempo do próximo spawn de Enemy2
-	private double nextB1; // Tempo do próximo spawn de Boss1
-	private double nextB2; // Tempo do próximo spawn de Boss2
-	private int e2Count, b1Count, b2Count; // Contadores para spawns de Enemy2, Boss1 e Boss2
-	private double e2SpawnX, b1SpawnX, b1SpawnX; // Coordenadas de spawn de Enemy2, Boss1 e Boss2
-
+	// -------------- ATRIBUTOS PRINCIPAIS -------------- //
 	private Player player; // Instância do jogador
 	private Background background1; // Primeira camada do fundo
 	private Background background2; // Segunda camada do fundo
-	private Powerup1 powerup; // Instância do power-up
-	private long nextPowerupTime; // Tempo do próximo spawn de power-up
+	private long currentTime = System.currentTimeMillis(); // Tempo atual
+	boolean running = true; // Flag para indicar se o jogo está em execução
 
-	// Listas de projéteis e inimigos
-	private ArrayList<Projectile> projectiles;
-	private ArrayList<Projectile> eprojectiles1;
-	private ArrayList<Projectile> eprojectiles2;
-	private ArrayList<Projectile> eprojectiles3;
-	private ArrayList<Enemy1> enemies1;
-	private ArrayList<Enemy2> enemies2;
-	private ArrayList<Boss1> boss1;
-	private ArrayList<Boss2> boss2;
+	// ------------------- ARRAYLISTS ------------------- //
+	private ArrayList<Enemy> enemies;
+	private ArrayList<Projectile> playerProjectiles;
+	private ArrayList<Projectile> enemyProjectiles;
+	private ArrayList<Powerup> powerups;
+
+	// ------------ LÓGICA DE SPAWNS (temp) ------------ //
+
+
+	long delta; // Tempo entre frames
+	// Tempo do próximo spawn de Enemies 1 e 2 e Boss 1 e 2
+	private long nextE1, nextE2, nextB1, nextB2;
+	private int e2Count, b1Count, b2Count; // Contadores para spawns de Enemy2, Boss1 e Boss2
+	private double e2SpawnX, b1SpawnX, b2SpawnX; // Coordenadas de spawn de Enemy2, Boss1 e Boss2
+	private long nextPowerupTime;
 
 	// Construtor da classe Main
 	public Main() {
-		// Inicializa o jogador com 7 pontos de vida
-		player = new Player(7);
+		// Inicializa as entidades principais
+		this.player = new Player(7, new ArrayList<Projectile>());
+		this.background1 = new Background(0, 0.070, 20, 2);
+		this.background1 = new Background(0, 0.045, 50, 3);
 
-		// Inicializa a lista de projéteis do jogador
-		projectiles = new ArrayList<Projectile>();
-		for (int i = 0; i < 2000; i++) {
-			projectiles.add(new Projectile()); // Adiciona 2000 projéteis à lista
-		}
+		// Inicializa as listas
+		this.enemies = new ArrayList<>();
+		this.playerProjectiles = new ArrayList<>(); 
+		this.enemyProjectiles = new ArrayList<>(); 
+		this.powerups = new ArrayList<>();
 
-		// Inicializa a lista de projéteis do inimigo tipo 1
-		eprojectiles1 = new ArrayList<Projectile>();
-		for (int i = 0; i < 2000; i++) {
-			eprojectiles1.add(new Projectile()); // Adiciona 2000 projéteis à lista
-		}
+		// Atualiza o construtor do Player parausar a lista de projéteis
+		this.player.setShooting(new PlayerShooting(this.playerProjectiles));
 
-		// Inicializa a lista de projéteis do inimigo tipo 2
-		eprojectiles2 = new ArrayList<Projectile>();
-		for (int i = 0; i < 2000; i++) {
-			eprojectiles2.add(new Projectile()); // Adiciona 2000 projéteis à lista
-		}
-
-		// Inicializa a lista de projéteis do boss do tipo 1
-		eprojectiles3 = new ArrayList<Projectile>();
-		for (int i = 0; i < 2000; i++) {
-			eprojectiles3.add(new Projectile()); // Adiciona 2000 projéteis à lista
-		}
-
-		// Inicializa a lista de projéteis do boss do tipo 2
-		eprojectiles4 = new ArrayList<Projectile>();
-		for (int i = 0; i < 2000; i++) {
-			eprojectiles4.add(new Projectile()); // Adiciona 2000 projéteis à lista
-		}
-
-		// Inicializa a lista de inimigos tipo 1
-		enemies1 = new ArrayList<Enemy1>();
-		for (int i = 0; i < 10; i++) {
-			enemies1.add(new Enemy1()); // Adiciona 10 inimigos tipo 1 à lista
-		}
-
-		// Inicializa a lista de inimigos tipo 2
-		enemies2 = new ArrayList<Enemy2>();
-		for (int i = 0; i < 10; i++) {
-			enemies2.add(new Enemy2()); // Adiciona 10 inimigos tipo 2 à lista
-		}
-
-		// Inicializa a lista de boss do tipo 1
-		boss1 = new ArrayList<Boss1>();
-		for (int i = 0; i < 5; i++) {
-			boss1.add(new Boss1()); // Adiciona 5 boss do tipo 1 à lista
-		}
-
-		// Inicializa a lista de boss do tipo 2
-		boss2 = new ArrayList<Boss2>();
-		for (int i = 0; i < 5; i++) {
-			boss2.add(new Boss2()); // Adiciona 5 boss do tipo 2 à lista
-		}
-
-		// Inicializa o power-up
-		powerup = new Powerup1(); // Cria uma nova instância da classe Powerup1
-		powerup.setX(Math.random() * (GameLib.WIDTH - 20.0) + 10.0); // Define a posição X inicial do power-up de forma
-																		// aleatória
-		powerup.setY(GameLib.HEIGHT); // Define a posição Y inicial do power-up fora da tela
-
-		// Inicializa tempos de spawn
-		currentTime = System.currentTimeMillis(); // Obtém o tempo atual em milissegundos
-		nextE1 = currentTime + 2000; // Define o tempo do próximo spawn de Enemy1 para 2 segundos no futuro
-		nextE2 = currentTime + 7000; // Define o tempo do próximo spawn de Enemy2 para 7 segundos no futuro
-		nextB1 = currentTime + 5000; // Define o tempo do próximo spawn de Boss1 para 5 segundos no futuro
-		nextB2 = currentTime + 5000; // Define o tempo do próximo spawn de Boss2 para 5 segundos no futuro
-		nextPowerupTime = currentTime + 30000; // Define o tempo do próximo spawn de power-up para 30 segundos no futuro
-		e2Count = 0; // Inicializa o contador de Enemy2
-		e2SpawnX = GameLib.WIDTH * 0.20; // Define a posição de spawn inicial de Enemy2
-
-		// Inicializa o fundo
-		background1 = new Background(0, 0.070, 20, 2); // Cria uma nova instância da classe Background para a camada 1
-		background2 = new Background(0, 0.045, 50, 3); // Cria uma nova instância da classe Background para a camada 2
+		// Lógica de spawn
+		this.nextE1 = currentTime + 2000;
+		this.nextE2 = currentTime + 4000;
+		this.nextB1 = currentTime + 20000;
+		this.nextB2 = currentTime + 40000;
+		this.nextPowerupTime = currentTime + (long)(Math.random() * 15);
+		this.e2SpawnX = GameLib.WIDTH * 0.20;
 	}
 
 	// Método para atualizar o estado do power-up
@@ -154,79 +98,43 @@ public class Main {
 
 	// Método para lançar novos inimigos
 	private void launchNewEnemies(long currentTime) {
-		// Lançando Enemy1
-		if (currentTime > nextE1) {
-			// Encontra um índice livre na lista de inimigos do tipo 1
-			int free = findFreeIndex(enemies1);
-			if (free < 8) {
-				// Inicializa os atributos do novo inimigo
-				enemies1.get(free).setX(Math.random() * (GameLib.WIDTH - 20.0) + 10.0); // Posição X aleatória
-				enemies1.get(free).setY(-10.0); // Posição Y acima da tela
-				enemies1.get(free).setV(0.10 + Math.random() * 0.10); // Velocidade aleatória
-				enemies1.get(free).setAngle(3 * Math.PI / 2); // Ângulo de movimento para baixo
-				enemies1.get(free).setRv(0.0); // Velocidade de rotação zero
-				enemies1.get(free).setState(ACTIVE); // Define o estado como ativo
-				enemies1.get(free).setShoot(currentTime + 750); // Define o tempo do próximo disparo
+	    // Lançando Enemy1
+	    if (currentTime > nextE1) {
+	        Enemy1 newEnemy = new Enemy1(); // Cria uma nova instância
+	        newEnemy.setX(Math.random() * (GameLib.WIDTH - 20.0) + 10.0);
+	        newEnemy.setY(-10.0);
+	        newEnemy.setV(0.10 + Math.random() * 0.10);
+	        newEnemy.setAngle(3 * Math.PI / 2);
+	        newEnemy.setState(ACTIVE);
+	        // Configura as estratégias dele. O tiro usará a lista unificada de projéteis inimigos.
+	        newEnemy.setShooting(new EnemyShooting()); // Supondo que Enemy1Shooting é a estratégia correta
 
-				// Define o tempo do próximo spawn de Enemy1
-				nextE1 = currentTime + 750;
-			}
-		}
+	        this.enemies.add(newEnemy); // Adiciona na lista unificada
+	        this.nextE1 = currentTime + 1200;
+	    }
 
-		// Lançando Enemy2
-		if (currentTime > nextE2) {
-			// Encontra um índice livre na lista de inimigos do tipo 2
-			int free = findFreeIndex(enemies2);
-			if (free < enemies2.size() && free < 10) {
-				// Inicializa os atributos do novo inimigo
-				enemies2.get(free).setX(e2SpawnX); // Posição X predefinida
-				enemies2.get(free).setY(-10.0); // Posição Y acima da tela
-				enemies2.get(free).setV(0.25); // Velocidade fixa
-				enemies2.get(free).setAngle(3 * Math.PI / 2); // Ângulo de movimento para baixo
-				enemies2.get(free).setRv(0.0); // Velocidade de rotação zero
-				enemies2.get(free).setState(ACTIVE); // Define o estado como ativo
+	    // Lançando Boss1
+	    if (currentTime > nextB1) {
+	        // Checa se já não existe um chefe na tela
+	        boolean bossExists = false;
+	        for(Enemy e : enemies){
+	            if(e instanceof Boss1 || e instanceof Boss2) {
+	                bossExists = true;
+	                break;
+	            }
+	        }
 
-				e2Count++; // Incrementa o contador de spawns de Enemy2
-
-				// Define o tempo do próximo spawn de Enemy2
-				if (e2Count < 10) {
-					nextE2 = currentTime + 500;
-				} else {
-					e2Count = 0; // Reseta o contador
-					// Alterna a posição de spawn entre a esquerda e a direita
-					e2SpawnX = Math.random() > 0.5 ? GameLib.WIDTH * 0.2 : GameLib.WIDTH * 0.8;
-					nextE2 = (long) (currentTime + 3000 + Math.random() * 3000); // Tempo aleatório entre 3 e 6 segundos
-				}
-			}
-		}
-
-		// Lançando Boss1
-		if (currentTime > nextB1) {
-			// Encontra um índice livre na lista de boss do tipo 1
-			int free = findFreeIndex(boss1);
-			if (free < boss1.size() && free < 5) {
-				// Inicializa os atributos do novo inimigo
-				boss1.get(free).setX(b1SpawnX); // Posição X predefinida
-				boss1.get(free).setY(-10.0); // Posição Y acima da tela
-				boss1.get(free).setV(0.50); // Velocidade fixa
-				boss1.get(free).setAngle(3 * Math.PI / 2); // Ângulo de movimento para baixo
-				boss1.get(free).setRv(0.0); // Velocidade de rotação zero
-				boss1.get(free).setState(ACTIVE); // Define o estado como ativo
-
-				b1Count++; // Incrementa o contador de spawns de Boss1
-
-				// Define o tempo do próximo spawn de Boss1
-				if (b1Count < 5) {
-					nextB1 = currentTime + 500;
-				} else {
-					b1Count = 0; // Reseta o contador
-					// Alterna a posição de spawn entre a esquerda e a direita
-					b1SpawnX = Math.random() > 0.5 ? GameLib.WIDTH * 0.2 : GameLib.WIDTH * 0.8;
-					nextB1 = (long) (currentTime + 3000 + Math.random() * 4000); // Tempo aleatório entre 3 e 7 segundos
-				}
-			}
-		}
-	}
+	        if(!bossExists){
+	            Boss1 newBoss = new Boss1(50); // Cria um novo chefe com 50 de HP
+	            newBoss.setX(GameLib.WIDTH / 2);
+	            newBoss.setY(-10.0);
+	            newBoss.setState(ACTIVE);
+	            
+	            this.enemies.add(newBoss);
+	            this.nextB1 = Long.MAX_VALUE; // Só permite spawnar um chefe por enquanto
+	        }
+	    }
+	    // A lógica para Enemy2 e Boss2 seguiria o mesmo padrão...
 
 		// Lançando Boss2
 		if (currentTime > nextB2) {

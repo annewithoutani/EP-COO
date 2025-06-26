@@ -6,13 +6,13 @@ import java.awt.Color;
 public class Powerup2 extends Powerup {
 
     public Powerup2(double x, double y) {
-        super(x, y, 2); //Chama o construtor de Powerup passando o tipo 2
+        super(x, y);
     }
 
     // Método para desenhar o power-up na tela
-    // (mostra para a Entidade como fazer isso)
+    // (chamado por render() da classe Entidade)
     public void draw(long currentTime) {
-        GameLib.setColor(Color.CYAN); // Define a cor do power-up como amarelo
-        GameLib.drawDiamond(getX(), getY(), getRadius()); // Desenha o power-up como um losango
+        GameLib.setColor(Color.CYAN);
+        GameLib.drawDiamond(getX(), getY(), getRadius());
     }
 }

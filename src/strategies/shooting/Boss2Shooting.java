@@ -1,48 +1,52 @@
 package strategies.shooting;
 
 import core.Main;
-import entities.projectiles.Projectile;
-import entities.spaceships.Spaceship;
-import entities.spaceships.player.Player;
 import lib.GameLib;
-import strategies.IShooting;
 import java.util.ArrayList;
+import strategies.IShooting;
+import entities.spaceships.Spaceship;
+import entities.projectiles.Projectile;
+import entities.spaceships.enemies.Enemy;
 
-public class PlayerShooting implements IShooting {
-    private long nextShot = 0;
+public class Boss2Shooting implements IShooting {
     private ArrayList<Projectile> projectiles;
 
     // A estratégia precisa saber onde encontrar os projéteis
-    public PlayerShooting(ArrayList<Projectile> projectiles) {
+    public Boss2Shooting(ArrayList<Projectile> projectiles) {
         this.projectiles = projectiles;
     }
 
     @Override
-    public void shoot(Spaceship self, long currentTime) {
-        Player player = (Player) self;
-        if (player.getState() != Main.ACTIVE) return;
+    public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {
+        Enemy boss = (Enemy) self;
         
         // Lógica de tiro
-        if (GameLib.iskeyPressed(GameLib.KEY_CONTROL)) {
-            if (currentTime > player.getShot()) {
-                int free = Main.findFreeIndex(this.projectiles); //
-                if (free < this.projectiles.size()) {
-                    Projectile p = this.projectiles.get(free);
-                    p.setX(player.getX()); //
-                    p.setY(player.getY() - 2 * player.getRadius()); //
-                    p.setVX(0.0); //
-                    p.setVY(-1.0); //
-                    p.setState(Main.ACTIVE); //
-                    
-                    // A frequência de tiro é controlada aqui dentro.
-                    nextShot = currentTime + 100;
+        if (currentTime > boss.getShoot()) {
 
-                    if (player.powerup1Enabled()) {player.setShot(currentTime + 10)}
+            // Tenta encontrar 3 projéteis livres na lista para o tiro triplo.
+            int[] freeSlots = Main.findFreeIndex(projectiles, 3);
 
-                    else if (player.powerup2Enabled()){player.setShot(currentTime + 55)}
+            if (freeSlots.lenght >= 3) {
+                // Define os ângulos do leque: reto, diagonal esquerda, diagonal direita.
+                // PI/2 é para baixo. Adicionamos/subtraímos para as diagonais.
+                double[] angles = {
+                    Math.PI / 2,
+                    Math.PI / 2 + 0.25,
+                    Math.PI / 2 - 0.25
+                };
+                double projectileSpeed = 0.3; // Velocidade dos projéteis
 
-                    else {player.setShot(currentTime + 100)}
-                }
+                for (int i = 0; i < angles.lenght; i++){
+                    Projectile p = projectiles.get(freeSlots[i]);
+                    p.setX(boss.getX());
+                    p.setY(boss.getY());
+                    p.setVX(Math.cos(angles[i]) * projectileSpeed);
+                    p.setVY(Math.sin(angles[i]) * projectileSpeed);
+                    p.setState(Main.ACTIVE);
+                }   
+
+                // A frequência de tiro é controlada aqui dentro.
+                boss.setShoot(currentTime + 500);
             }
         }
     }

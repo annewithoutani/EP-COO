@@ -13,6 +13,9 @@ public class Enemy2 extends Enemy {
     // Construtor da classe Enemy2
     public Enemy2() {
         super(12.00, Main.INACTIVE); // Chama o construtor da classe Enemy com raio 12.00 e estado INACTIVE
+        // Configura as estratégias padrão para Enemy2
+        this.setMovement(new TrackingMovement(0.25));
+        this.setShooting(new EnemyShooting());
     }
 
     // Método para atualizar o estado do Enemy2
@@ -80,6 +83,10 @@ public class Enemy2 extends Enemy {
                 }
             }
         }
+    }
+
+    public void move(long delta, long currentTime) {
+        this.movement.move(this, delta);
     }
 
     // Método para renderizar o Enemy2

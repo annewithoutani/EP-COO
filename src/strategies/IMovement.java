@@ -1,10 +1,12 @@
 package strategies;
 
 import entities.Entity;
+import entities.spaceships.player.Player;
 
 /*****************************************************
  * Contrato para todas as estratégias de movimento.  *
  ****************************************************/
-public interface IMovementStrategy {
+public interface IMovement {
+    void move(Entity self, long delta, Player player);
     void move(Entity self, long delta);
 }

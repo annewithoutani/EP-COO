@@ -2,7 +2,6 @@ package entities.spaceships.player;
 
 import lib.GameLib;
 import core.Main;
-import utils.Health;
 
 import entities.projectiles.Projectile;
 import entities.spaceships.Spaceship;
@@ -17,6 +16,7 @@ public class Player extends Spaceship {
     private double exStart; // Tempo de início da explosão
     private boolean isFlashing; // Indica se o jogador está piscando devido a dano
     private long flashEndTime; // Tempo de fim do efeito de piscagem
+    private ArrayList<Projectile> projectiles;
 
     public Player(int initialHp, ArrayList<Projectile> projectiles) {
         // Chama o construtor da classe Entity
@@ -26,6 +26,8 @@ public class Player extends Spaceship {
         setMovement(new PlayerMovement());
         setShooting(new PlayerShooting(projectiles));
 
+        this.projectiles = projectiles;
+        setShooting(new PlayerShooting(this.projectiles));
         this.exEnd = 0; // Inicializa o tempo de fim da explosão
         this.exStart = 0; // Inicializa o tempo de início da explosão
         this.isFlashing = false; // Inicializa o estado de piscagem
@@ -33,14 +35,17 @@ public class Player extends Spaceship {
     }
 
     // Método para atualizar o estado do jogador
+    @Override
     public void update(long delta, long currentTime) {
         // Chama o movimento por Entity.update
         super.update(delta);
 
-        // Chama o tiro por shooting
-        getShooting().ifPresent(strategy -> strategy.shoot(this, currentTime));
+        // Chama o tiro usando a estratégia, agora passando o contexto.
+        if (this.shooting != null) {
+            this.shooting.shoot(this, currentTime, this.projectiles);
+        }
 
-        // Atualiza os outros estados, como explosão ou flash
+        // Atualiza os outros estados (como explosão ou flash)
         updatePlayerState(currentTime);
     }
 
@@ -51,7 +56,7 @@ public class Player extends Spaceship {
             // Se o tempo atual for maior que o tempo de fim da explosão, restaura o jogador
             if (currentTime > exEnd) {
                 setState(Main.ACTIVE); // Define o estado do jogador como ativo
-                getHealth().ifPresent(h -> h.reset()); // Restaura a vida ao valor inicial
+                hp = maxHP;
                 setX(GameLib.WIDTH / 2); // Reposiciona o jogador na coordenada inicial X
                 setY(GameLib.HEIGHT * 0.90); // Reposiciona o jogador na coordenada inicial Y
             }
@@ -85,4 +90,5 @@ public class Player extends Spaceship {
             }
             GameLib.drawPlayer(getX(), getY(), getRadius());
         }
+    }
 }

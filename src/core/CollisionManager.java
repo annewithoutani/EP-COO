@@ -41,11 +41,7 @@ public class CollisionManager {
 
                 if (distance < e.getRadius()) {
                     // Causa a explosão do inimigo
-                    e.setState(Main.EXPLODING);
-                    // Supondo que Enemy tenha getters/setters para o tempo de explosão
-                    // e.setExStart(currentTime);
-                    // e.setExEnd(currentTime + 500);
-                    
+                    e.explode(currentTime);                    
                     // Desativa o projétil
                     p.setState(Main.INACTIVE);
                 }
@@ -62,13 +58,13 @@ public class CollisionManager {
             double distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < (player.getRadius() + e.getRadius()) * 0.8) {
-                // Usando o Health Component para aplicar dano
-                player.getHealth().ifPresent(health -> health.reduce(1));
+                player.takeDamage(1);
+                player.explode(currentTime);
                 e.setState(Main.INACTIVE); // Inimigo também é destruído na colisão
                 
                 // Lógica para piscar ou explodir o jogador
-                if (player.getHealth().map(h -> h.isDepleted()).orElse(false)) {
-                    // player.explode(currentTime);
+                if (player.isDead()) {
+                    player.setState(Main.EXPLODING);
                 } else {
                     player.startFlashing(currentTime);
                 }
@@ -85,11 +81,11 @@ public class CollisionManager {
             double distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < (player.getRadius() + p.getRadius()) * 0.8) {
-                player.getHealth().ifPresent(health -> health.reduce(1));
+                player.takeDamage(1);
                 p.setState(Main.INACTIVE); // Projétil é destruído
 
-                if (player.getHealth().map(h -> h.isDepleted()).orElse(false)) {
-                    // player.explode(currentTime);
+                if (player.isDead()) {
+                    player.explode(currentTime);
                 } else {
                     player.startFlashing(currentTime);
                 }
@@ -107,10 +103,10 @@ public class CollisionManager {
 
             if (distance < (player.getRadius() + p.getRadius()) * 0.8) {
                 if (p instanceof Powerup1) {
-                    
+                    // TODO: ativar o efeito do powerup 1
                 }
-                else {
-
+                else if (p instanceof Powerup2) {
+                    // TODO: ativar o efeito do powerup 2
                 }
             }
         }

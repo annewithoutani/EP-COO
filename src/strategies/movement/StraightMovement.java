@@ -1,9 +1,8 @@
 package strategies.movement;
 
-import entities.Entity;
-import entities.projectiles.Projectile;
-import strategies.IMovement;
 import core.Main;
+import entities.Entity;
+import strategies.IMovement;
 
 public class StraightMovement implements IMovement {
     private double vx;

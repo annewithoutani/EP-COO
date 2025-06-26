@@ -1,26 +1,40 @@
 package entities.spaceships;
 
 import java.util.Optional;
-import utils.Health;
 import entities.Entity;
 import strategies.IShooting;
 
 public abstract class Spaceship extends Entity {
-    protected Health health;
-    protected IShooting shooting;
+    protected int hp; // Pontos de vida
+    private double exStart; // Tempo de início da explosão
+    private double exEnd; // Tempo de fim da explosão
+    protected IShooting shooting; // Estratégia de tiro
 
     public Spaceship(double X, double Y, int state, double radius) {
         super(X, Y, state, radius);
-        this.health = null;
         this.shooting = null;
     }
 
-    public void setHealth(Health health) {
-        this.health = health;
+    public void setHealth(int hp) {
+        this.hp = hp;
     }
 
-    public Optional<Health> getHealth() {
-        return Optional.ofNullable(this.health);
+    public void takeDamage(int damage) {
+        this.hp = this.hp - damage < 0 ? 0 : this.hp - damage;
+    }
+
+    public boolean isDead() {
+        return this.hp <= 0;
+    }
+
+    public int getHealth() {
+        return this.hp;
+    }
+
+    public void explode(long currentTime) {
+        this.state = Main.EXPLODING;
+        this.exStart = currentTime;
+        this.exEnd = currentTime + 500;
     }
     
     public void setShooting(IShooting strategy) {

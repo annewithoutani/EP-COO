@@ -14,6 +14,9 @@ public class Enemy1 extends Enemy {
     // Construtor da classe Enemy1
     public Enemy1() {
         super(9.00, Main.INACTIVE); // Chama o construtor da classe Enemy com raio 9.00 e estado INACTIVE
+        // Configura as estratégias padrão para Enemy1
+        this.setMovement(new StraightMovement(0, 0.12));
+        this.setShooting(new EnemyShooting());
     }
 
     // Método para atualizar o estado do Enemy1
@@ -53,6 +56,10 @@ public class Enemy1 extends Enemy {
                 }
             }
         }
+    }
+
+    public void move(long delta, long currentTime) {
+        this.movement.move(this, delta);
     }
 
     // Método para renderizar o Enemy1

@@ -2,25 +2,25 @@ package entities.spaceships.enemies;
 
 import lib.GameLib;
 import core.Main;
-import utils.Health;
-
 import entities.spaceships.player.Player;
-
 import entities.projectiles.Projectile;
 import entities.spaceships.Spaceship;
-import strategies.movement.PlayerMovement;
-import strategies.shooting.PlayerShooting;
+
+import strategies.movement.*;
+import strategies.shooting.*;
 
 import java.awt.Color;
 import java.util.ArrayList;
 
 public abstract class Enemy extends Spaceship {
+    public static final int INIMIGO_1 = 1;
+    public static final int INIMIGO_2 = 2;
+    public static final int BOSS_1 = 3;
+    public static final int BOSS_2 = 4;
     // Atributos adicionais da classe Enemy
     private double v; // Velocidade do inimigo
     private double angle; // Ângulo de movimento do inimigo
     private double rv; // Velocidade de rotação do inimigo
-    private double exStart; // Tempo de início da explosão
-    private double exEnd; // Tempo de fim da explosão
     private long shoot; // Tempo do próximo disparo do inimigo
 
     // Construtor da classe Enemy
@@ -28,7 +28,28 @@ public abstract class Enemy extends Spaceship {
         super(0, 0, state, radius); // Chama o construtor da classe Entity
     }
 
-    // --- TEMPLATE METHOD PARA ATUALIZAÇÃO --- //
+    // Método para criação de inimigos
+    public static Enemy createEnemy(int type, int hp){
+        switch (type){
+            case INIMIGO_1:
+                Enemy1 enemy1 = new Enemy1();
+                return enemy1;
+
+            case INIMIGO_2:
+                Enemy2 enemy2 = new Enemy2();
+                return enemy2;
+
+            case BOSS_1:
+                Boss1 boss1 = new Boss1(hp);
+                return boss1;
+
+            case BOSS_2:
+                Boss2 boss2 = new Boss2(hp);
+                return boss2;
+        }
+    }
+
+    // Método para atualização
     public final void update(long delta, long currentTime, Player player, ArrayList<Projectile> enemyProjectiles) {
         if (getState() == Main.EXPLODING) {
             if (currentTime > getExEnd()) {
@@ -39,7 +60,7 @@ public abstract class Enemy extends Spaceship {
                 setState(Main.INACTIVE);
             } else {
                 // Delega o comportamento específico para as subclasses
-                executeMovement(delta, currentTime);
+                this.move(delta, currentTime);
                 executeShooting(currentTime, player, enemyProjectiles);
             }
         }
@@ -65,7 +86,7 @@ public abstract class Enemy extends Spaceship {
     public abstract void executeShooting(long currentTime, Player player, ArrayList<Projectile> enemyProjectiles);
 
     /** Define como o inimigo deve ser desenhado na tela. */
-    public abstract void draw();
+    public abstract void draw(long currentTime);
 
     /** Verifica se o inimigo saiu da tela. Pode ser sobrescrito por chefes. */
     public boolean isOffScreen() {
