@@ -29,6 +29,7 @@ public class Main {
 	private Background background1; // Primeira camada do fundo
 	private Background background2; // Segunda camada do fundo
 	private long currentTime = System.currentTimeMillis(); // Tempo atual
+	long delta; // Tempo entre frames
 	boolean running = true; // Flag para indicar se o jogo está em execução
 
 	// ------------------- ARRAYLISTS ------------------- //
@@ -38,9 +39,6 @@ public class Main {
 	private ArrayList<Powerup> powerups;
 
 	// ------------ LÓGICA DE SPAWNS (temp) ------------ //
-
-
-	long delta; // Tempo entre frames
 	// Tempo do próximo spawn de Enemies 1 e 2 e Boss 1 e 2
 	private long nextE1, nextE2, nextB1, nextB2;
 	private int e2Count, b1Count, b2Count; // Contadores para spawns de Enemy2, Boss1 e Boss2

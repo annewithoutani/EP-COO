@@ -16,34 +16,52 @@ public abstract class Entity {
         this.movement = null;
     }
 
-    // O método de atualização principal
-    // 1. delega o movimento.
-    // 2. atualiza o estado da entidade
-    public void move(long delta) {
+    // Update base para todas as entidades apenas checa se
+    // a entidade está fora da tela:
+    // - caso sim: deixa ela inativa
+    // - caso não: movimenta ela de acordo com sua estratégia
+    public void update(long currentTime, long delta) {
+        if (getState() == Main.ACTIVE) {
+            if (isOffScreen()) {
+                setState(Main.INACTIVE);
+            } else {
+                this.move(delta);
+            }
+        }
+    }
+
+    public abstract void move(long delta) {
         if (this.state == Main.ACTIVE && this.movement != null) {
             this.movement.move(this, delta);
         }
     }
 
-    // Faz a verificação do estado e chama o método draw da subclasse
+    public void setMovement(IMovement strategy) {
+        this.movement = strategy;
+    }
+
+    /** Define que a entidade deve saber como quer ser desenhada **/
+    public abstract void draw(long currentTime);
+    
+    /** Verifica se saiu da tela **/
+    public boolean isOffScreen() {
+        return (getY() > GameLib.HEIGHT + 10) || (getX() < -10) || (getX() > GameLib.WIDTH + 10);
+    }
+
+    /** Faz a verificação do estado e chama o método draw da subclasse **/
     public final void render(long currentTime){
         if(this.state == Main.ACTIVE || this.state == Main.EXPLODING){
             draw(currentTime);
         }
     }
 
-    public abstract void draw(long currentTime);
-    
-    public void setMovement(IMovement strategy) {
-        this.movement = strategy;
-    }
+    // --- GETTERS E SETTERS PARA OS ATRIBUTOS --- //
 
-    // Getters e Setters existentes
-    public int getState() { return state; }
-    public void setState(int state) { this.state = state; }
-    public double getX() { return X; }
-    public void setX(double X) { this.X = X; }
-    public double getY() { return Y; }
-    public void setY(double Y) { this.Y = Y; }
-    public double getRadius() { return radius; }
+    public int getState()               return state;
+    public void setState(int state)     this.state = state;
+    public double getX()                return X;
+    public void setX(double X)          this.X = X;
+    public double getY()                return Y;
+    public void setY(double Y)          this.Y = Y;
+    public double getRadius()           return radius;
 }

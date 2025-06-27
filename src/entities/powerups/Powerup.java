@@ -18,6 +18,4 @@ public abstract class Powerup extends Entity {
 
         this.setMovement(new StraightMovement(0.0, 0.45));
     }
-
-    public abstract void draw(long currentTime);
 }

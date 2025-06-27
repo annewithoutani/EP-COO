@@ -17,13 +17,8 @@ public class Boss2 extends Enemy {
         hp = maxHP;
     }
 
-    // Método para atualizar o estado do Boss2
-    public void updateState(long delta, long currentTime, Player player, ArrayList<Projectile> eprojectiles4) {
-        // TODO
-    }
-
+    @Override
     public void draw(long currentTime) {
         // TODO
     }
-
 }

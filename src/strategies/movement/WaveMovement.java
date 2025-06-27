@@ -9,13 +9,13 @@ public class WaveMovement implements IMovement {
     private double angle = 0; // Ângulo para a função seno
     private double amplitude;   // A largura da onda
     private double frequency;   // A velocidade da oscilação
-    private double verticalSpeed; // A velocidade de descida na tela
+    private double vy; // A velocidade de descida na tela
     private double initialX;    // Posição X inicial para calcular a onda a partir dela
 
-    public WaveMovement(double amplitude, double frequency, double verticalSpeed) {
+    public WaveMovement(double amplitude, double frequency, double vy) {
         this.amplitude = amplitude;
         this.frequency = frequency;
-        this.verticalSpeed = verticalSpeed;
+        this.vy = vy;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class WaveMovement implements IMovement {
         }
 
         // Atualiza a posição Y (descida constante)
-        self.setY(self.getY() + verticalSpeed * delta);
+        self.setY(self.getY() + vy * delta);
 
         // Atualiza o ângulo para a função seno (controla a oscilação)
         this.angle += frequency * delta * 0.01; // O 0.01 é um fator para ajustar a velocidade

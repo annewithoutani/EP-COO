@@ -10,17 +10,11 @@ import java.util.ArrayList;
 
 public class Boss1Shooting implements IShooting {
     private long nextShot = 0;
-    private ArrayList<Projectile> projectiles;
-
-    // A estratégia precisa saber onde encontrar os projéteis
-    public Boss1Shooting(ArrayList<Projectile> projectiles) {
-        this.projectiles = projectiles;
-    }
 
     @Override
-    public void shoot(Spaceship self, long currentTime, Player player, ArrayList<Projectile> projectiles) {        
+    public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {        
         // Lógica de tiro
-        if (currentTime > self.getShoot() && self.getY() < player.getY()) {
+        if (currentTime > self.getShoot()) {
             int free = Main.findFreeIndex(projectiles);
             if (free < projectiles.size()) {
                 Projectile p = projectiles.get(free);

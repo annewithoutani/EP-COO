@@ -102,6 +102,7 @@ public class CollisionManager {
             double distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < (player.getRadius() + p.getRadius()) * 0.8) {
+                p.setState(Main.INACTIVE);
                 if (p instanceof Powerup1) {
                     // TODO: ativar o efeito do powerup 1
                 }

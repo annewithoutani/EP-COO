@@ -9,12 +9,6 @@ import entities.projectiles.Projectile;
 import entities.spaceships.enemies.Enemy;
 
 public class Boss2Shooting implements IShooting {
-    private ArrayList<Projectile> projectiles;
-
-    // A estratégia precisa saber onde encontrar os projéteis
-    public Boss2Shooting(ArrayList<Projectile> projectiles) {
-        this.projectiles = projectiles;
-    }
 
     @Override
     public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {

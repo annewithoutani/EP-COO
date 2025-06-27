@@ -18,23 +18,23 @@ public class EnemyShooting implements IShooting {
     }
 
     @Override
-    public void shoot(Spaceship self, long currentTime, Player player, ArrayList<Projectile> projectiles) {
+    public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {
         // Lógica de tiro
-        if (currentTime > enemy.getShoot() && enemy.getY() < player.getY()) {
+        if (currentTime > self.getShoot()) {
             int free = Main.findFreeIndex(projectiles);
             if (free < projectiles.size()) {
                 Projectile p = projectiles.get(free);
-                p.setX(enemy.getX());
-                p.setY(enemy.getY());
+                p.setX(self.getX());
+                p.setY(self.getY());
                 // Dispara na direção em que a nave está virada 
-                p.setVX(Math.cos(enemy.getAngle()) * 0.45);
-                p.setVY(Math.sin(enemy.getAngle()) * 0.45 *(-1.0));
+                p.setVX(Math.cos(self.getAngle()) * 0.45);
+                p.setVY(Math.sin(self.getAngle()) * 0.45 *(-1.0));
                 p.setState(Main.ACTIVE);
                 
                 // A frequência de tiro é controlada aqui dentro.
                 nextShot = currentTime + 100;
 
-                enemy.setShoot((long) (currentTime + 50 + Math.random() * 10));
+                self.setShoot((long) (currentTime + 50 + Math.random() * 10));
             }
         }
     }

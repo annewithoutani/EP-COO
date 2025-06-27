@@ -1,59 +1,73 @@
 //========================================================
-// NÚCLEO, COMPONENTES E ESTRATÉGIAS
+// HIERARQUIA DO JOGO
 //========================================================
 
-[C] Main
-    --> [C] Player
-    --> List<[A] Enemy>
-    // ... etc.
-
-// --- Componentes (Dados/Capacidades) ---
-[C] HealthComponent
-
-// --- Interfaces de Estratégia (Contratos de Comportamento) ---
-(I) IMovementStrategy
-    + void move(Entity self, long delta);
-
-(I) IShootingStrategy
-    + void shoot(Spaceship self, long currentTime);
-
-
-//========================================================
-// HIERARQUIA DE ENTIDADES DO JOGO (REVISADA)
-//========================================================
-
-(A) Entity
-    --> [I] IMovementStrategy
-    |               // COMPOSIÇÃO: Toda entidade TEM UMA
-    |                              forma de se mover.
-    |
-    +---- extends (A) Spaceship
-    |       --> [C] HealthComponent
-    |               // COMPOSIÇÃO: Naves PODEM TER vida.
-    |                
-    |       --> [I] IShootingStrategy
-    |               // COMPOSIÇÃO: Naves TÊM uma ou mais
-    |                              formas de atirar.
-    |
-    |       |
-    |       +---- extends [C] Player    
-    |       |
-    |       +---- extends (A) Enemy
-    |               |
-    |               +---- extends [C] Enemy1
-    |               |
-    |               +---- extends [C] Enemy2
-    |               |
-    |               +---- extends (A) Boss
-    |                       |
-    |                       +---- extends [C] Boss1
-    |                       |
-    |                       +---- extends [C] Boss2
-    |
-    +---- extends [C] Projectile
-    |
-    +---- extends (A) Powerup
-            |
-            +---- extends [C] Powerup1
-            |
-            +---- extends [C] Powerup2
+<src>
+  |
+  |--> <core>
+  |       |--> [C] CollisionManager.java
+  |       |
+  |       |--> [C] Main.java
+  |
+  |--> <lib>
+  |       |--> [C] GameLib.java
+  |
+  |--> <utils>
+  |       |--> [C] Background.java
+  |
+  |--> <strategies>
+  |       |--> <movement>
+  |       |        |--> [C] PlayerMovement.java
+  |       |        |
+  |       |        |--> [C] StraightMovement.java
+  |       |        |
+  |       |        |--> [C] TrackingMovement.java
+  |       |        |
+  |       |        |--> [C] WaveMovement.java
+  |       |        |
+  |       |        |--> [C] ZigZagMovement.java
+  |       |
+  |       |--> <shooting>
+  |       |        |--> [C] PlayerShooting.java
+  |       |        |
+  |       |        |--> [C] EnemyShooting.java
+  |       |        |
+  |       |        |--> [C] Boss1Shooting.java
+  |       |        |
+  |       |        |--> [C] Boss2Shooting.java
+  |       |
+  |       |--> (Interface) IMovement.java
+  |       |
+  |       |--> (Interface) IShooting.java
+  |
+  |--> <entities>
+  |       |--> <powerups>
+  |       |        |--> [A] Powerup.java
+  |       |        |
+  |       |        |--> [C] Powerup1.java
+  |       |        |
+  |       |        |--> [C] Powerup2.java
+  |       |
+  |       |--> <projectiles>
+  |       |        |--> [C] Projectile.java
+  |       |
+  |       |--> <spaceships>
+  |       |        |--> <enemies>
+  |       |        |        |--> [A] Enemy.java
+  |       |        |        |
+  |       |        |        |--> [C] Enemy1.java
+  |       |        |        |
+  |       |        |        |--> [C] Enemy2.java
+  |       |        |        |
+  |       |        |        |--> [C] Boss1.java
+  |       |        |        |
+  |       |        |        |--> [C] Boss2.java
+  |       |        |        |
+  |       |        |
+  |       |        |--> <player>
+  |       |        |        |--> [C] Player.java
+  |       |        |
+  |       |        |--> [C] Spaceship.java
+  |       |
+  |       |--> [C] Entity.java
+  |
