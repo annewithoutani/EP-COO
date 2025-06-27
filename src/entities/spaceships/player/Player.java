@@ -20,7 +20,7 @@ public class Player extends Spaceship {
         // Chama o construtor da classe Entity
         super(GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90, Main.ACTIVE, 12.00);
                 
-        this.maxHP = maxHP;
+        this.maxHP = maxHp;
         setHealth(maxHp);
         setMovement(new PlayerMovement());
         setShooting(new PlayerShooting());
@@ -36,7 +36,7 @@ public class Player extends Spaceship {
             // Se o tempo atual for maior que o tempo de fim da explosão, restaura o jogador
             if (currentTime > exEnd) {
                 setState(Main.ACTIVE); // Define o estado do jogador como ativo
-                hp = this.maxHP;
+                this.setHealth(this.maxHP);
                 setX(GameLib.WIDTH / 2); // Reposiciona o jogador na coordenada inicial X
                 setY(GameLib.HEIGHT * 0.90); // Reposiciona o jogador na coordenada inicial Y
             }
@@ -58,7 +58,7 @@ public class Player extends Spaceship {
 
     // Método para renderizar o jogador na tela
     public void draw(long currentTime) {
-        if (getState() == Main.EXPLODING) {
+        if (getState() == Main.EXPLODING && currentTime < getExEnd()) {
             double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
             GameLib.drawExplosion(getX(), getY(), alpha);
         } else {

@@ -18,13 +18,14 @@ public class PlayerShooting implements IShooting {
         // Lógica de tiro
         if (GameLib.iskeyPressed(GameLib.KEY_CONTROL)) {
             if (currentTime > nextShot) {
-                int free = Main.findFreeIndex(projectiles); //
+                int free = Main.findFreeIndex(projectiles);
+                System.out.println(projectiles.size());
                 if (free < projectiles.size()) {
                     Projectile p = projectiles.get(free);
+                    p.setState(Main.ACTIVE);
                     p.setMovement(new StraightMovement(0.0, -1.0));
-                    p.setX(self.getX()); //
-                    p.setY(self.getY() - 2 * self.getRadius()); //
-                    p.setState(Main.ACTIVE); //
+                    p.setX(self.getX());
+                    p.setY(self.getY() - 2 * self.getRadius());
                     
                     // A frequência de tiro é controlada aqui dentro.
                    nextShot = currentTime + 100;

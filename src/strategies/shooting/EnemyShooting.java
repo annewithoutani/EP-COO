@@ -19,7 +19,7 @@ public class EnemyShooting implements IShooting {
             int free = Main.findFreeIndex(projectiles);
             if (free < projectiles.size()) {
                 Projectile p = projectiles.get(free);
-                p.setMovement(new StraightMovement(0.0, 1.0));
+                p.setMovement(new StraightMovement(0.0, 0.3));
                 p.setX(self.getX());
                 p.setY(self.getY());
                 p.setState(Main.ACTIVE);

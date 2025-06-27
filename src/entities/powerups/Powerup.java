@@ -14,7 +14,7 @@ import strategies.movement.StraightMovement;
 public abstract class Powerup extends Entity {
     public Powerup(double x, double y) {
         // Se movem para baixo em linha reta
-        super(x, y, Main.INACTIVE, 12.0);
+        super(x, y, Main.ACTIVE, 12.0);
 
         this.setMovement(new StraightMovement(0.0, 0.45));
     }

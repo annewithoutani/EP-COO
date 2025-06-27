@@ -24,7 +24,7 @@ public abstract class Spaceship extends Entity {
     public abstract void draw(long currentTime);
 
     public final void render(long currentTime) {
-        if (getState() == Main.EXPLODING) {
+        if (getState() == Main.EXPLODING && currentTime < getExEnd()) {
             double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
             GameLib.drawExplosion(getX(), getY(), alpha);
         } else if (getState() == Main.ACTIVE) {

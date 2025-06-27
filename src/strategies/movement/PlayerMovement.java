@@ -6,8 +6,8 @@ import lib.GameLib;
 import strategies.IMovement;
 
 public class PlayerMovement implements IMovement {
-    private double vx = 0.25;
-    private double vy = 0.25;
+    private double vx = 0.15;
+    private double vy = 0.15;
 
     @Override
     public void move(Entity self, long delta) {

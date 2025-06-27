@@ -4,6 +4,7 @@ import lib.GameLib;
 import core.CollisionManager;
 import java.util.ArrayList;
 import utils.*;
+import java.awt.Color;
 
 import entities.Entity;
 import entities.spaceships.player.Player;
@@ -47,9 +48,12 @@ public class Main {
 	public Main() {
 		// Inicializa as listas
 		this.enemies = new ArrayList<>();
-		this.playerProjectiles = new ArrayList<>(); 
-		this.enemyProjectiles = new ArrayList<>(); 
-		this.powerups = new ArrayList<>();
+		this.playerProjectiles = new ArrayList<>(50);
+		this.enemyProjectiles = new ArrayList<>(150);
+		this.powerups = new ArrayList<>(5);
+
+		for(int i = 0; i < 50; i++) {playerProjectiles.add(new Projectile(0.0, -20.0, 0.0, 0.0, Color.GREEN));}
+		for(int i = 0; i < 150; i++) {enemyProjectiles.add(new Projectile(0.0, -20, 0.0, 0.0, Color.RED));}
 
 		// Inicializa as entidades principais
 		this.player = new Player(7, playerProjectiles);
@@ -124,6 +128,8 @@ public class Main {
 			CollisionManager.checkAllCollisions(player, enemies, 
                                    playerProjectiles, enemyProjectiles, 
                                    powerups, currentTime);
+
+			player.update(currentTime, delta);
 
 			// Atualizações de estados dos projéteis do jogador
 			for (Projectile projectile : playerProjectiles) {
