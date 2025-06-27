@@ -21,32 +21,32 @@ public abstract class Enemy extends Spaceship {
     private long shoot; // Tempo do próximo disparo do inimigo
 
     // Construtor da classe Enemy
-    public Enemy(double radius, int state) {
-        super(0, 0, state, radius); // Chama o construtor da classe Entity
+    public Enemy(double X, double Y, int state, double radius) {
+        super(X, Y, state, radius); // Chama o construtor da classe Entity
     }
 
     // Método para criação de inimigos
-    public static Enemy createEnemy(int type, int hp){
+    public static Enemy createEnemy(int type, double X, double Y, int hp){
         switch (type){
             case INIMIGO_1:
-                Enemy1 enemy1 = new Enemy1();
+                Enemy1 enemy1 = new Enemy1(X, Y);
                 return enemy1;
 
             case INIMIGO_2:
-                Enemy2 enemy2 = new Enemy2();
+                Enemy2 enemy2 = new Enemy2(X, Y);
                 return enemy2;
 
             case BOSS_1:
-                Boss1 boss1 = new Boss1(hp);
+                Boss1 boss1 = new Boss1(X, Y, hp);
                 return boss1;
 
             case BOSS_2:
-                Boss2 boss2 = new Boss2(hp);
+                Boss2 boss2 = new Boss2(X, Y, hp);
                 return boss2;
         }
+        return null;
     }
 
-    @Override
     public final void update(long delta, long currentTime, ArrayList<Projectile> enemyProjectiles) {
         if (getState() == Main.EXPLODING) {
             if (currentTime > getExEnd()) {
@@ -61,15 +61,4 @@ public abstract class Enemy extends Spaceship {
             }
         }
     }
-
-    // --- MÉTODOS ABSTRATOS QUE AS SUBCLASSES DEVEM IMPLEMENTAR --- //
-
-    /** Define a lógica de tiro **/
-    public abstract void executeShooting(long currentTime, Player player, ArrayList<Projectile> enemyProjectiles);
-
-    // --- GETTERS E SETTERS PARA OS ATRIBUTOS --- //
-   
-    // Tempo do próximo disparo
-    public void setShoot(long nextShoot)    this.shoot = nextShoot;
-    public long getShoot()                  return shoot;
 }

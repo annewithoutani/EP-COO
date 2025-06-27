@@ -11,7 +11,7 @@ public class CircleMovement implements IMovement {
     private double rv = 10.0; // velocidade de rotação
     private double angle = 10.0;
 
-    public CircleMovement(dou) {
+    public CircleMovement(double speed) {
         this.speed = speed;
     }
 

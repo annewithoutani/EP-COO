@@ -2,6 +2,7 @@ package core;
 
 import java.util.List;
 import entities.Entity;
+import entities.powerups.*;
 import entities.projectiles.Projectile;
 import entities.spaceships.enemies.Enemy;
 import entities.spaceships.player.Player;
@@ -27,7 +28,7 @@ public class CollisionManager {
         }
     }
 
-    private void checkPlayerProjectilesVsEnemies(List<Projectile> playerProjectiles, List<Enemy> enemies, long currentTime) {
+    private static void checkPlayerProjectilesVsEnemies(List<Projectile> playerProjectiles, List<Enemy> enemies, long currentTime) {
         for (Projectile p : playerProjectiles) {
             if (p.getState() != Main.ACTIVE) continue;
 
@@ -49,7 +50,7 @@ public class CollisionManager {
         }
     }
     
-    private void checkPlayerVsEnemies(Player player, List<Enemy> enemies, long currentTime) {
+    private static void checkPlayerVsEnemies(Player player, List<Enemy> enemies, long currentTime) {
         for (Enemy e : enemies) {
             if (e.getState() != Main.ACTIVE) continue;
             
@@ -72,7 +73,7 @@ public class CollisionManager {
         }
     }
     
-    private void checkPlayerVsEnemyProjectiles(Player player, List<Projectile> enemyProjectiles, long currentTime) {
+    private static void checkPlayerVsEnemyProjectiles(Player player, List<Projectile> enemyProjectiles, long currentTime) {
         for (Projectile p : enemyProjectiles) {
             if (p.getState() != Main.ACTIVE) continue;
             
@@ -93,7 +94,7 @@ public class CollisionManager {
         }
     }
 
-    private void checkPlayerVsPowerups(Player player, List<Powerup> powerups, long currentTime) {
+    private static void checkPlayerVsPowerups(Player player, List<Powerup> powerups, long currentTime) {
         for (Powerup p : powerups) {
             if (p.getState() != Main.ACTIVE) continue;
             

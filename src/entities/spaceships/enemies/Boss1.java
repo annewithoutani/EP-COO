@@ -9,15 +9,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Boss1 extends Enemy {
-    private int hp;
-
-    public Boss1(int maxHP) {
-        super(11.00, Main.INACTIVE); // Chama o construtor da classe Enemy com raio 11.00 e estado INACTIVE
+    public Boss1(double X, double Y, int maxHP) {
+        super(X, Y, Main.INACTIVE, 11.00); // Chama o construtor da classe Enemy com raio 11.00 e estado INACTIVE
         // TODO: implementar as estratégias de movimento, disparo, e o que mais for necessário
-        hp = maxHP;
+        this.maxHP = maxHP;
+        this.setHealth(maxHP);
     }
 
-    @Override
     public void draw(long currentTime) {
         // TODO
     }

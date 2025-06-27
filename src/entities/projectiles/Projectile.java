@@ -16,8 +16,9 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public void draw(long currentTime){
+    public void draw(){
         GameLib.setColor(this.color);
         GameLib.drawCircle(getX(), getY(), getRadius());
     }
+
 }

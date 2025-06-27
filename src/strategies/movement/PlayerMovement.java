@@ -15,13 +15,13 @@ public class PlayerMovement implements IMovement {
         
         // Lógica de movimento extraída de Main.processInput()
         if (GameLib.iskeyPressed(GameLib.KEY_UP))
-            self.setY(self.getY() - delta * this.vy());
+            self.setY(self.getY() - delta * this.vy);
         if (GameLib.iskeyPressed(GameLib.KEY_DOWN))
-            self.setY(self.getY() + delta * this.vy());
+            self.setY(self.getY() + delta * this.vy);
         if (GameLib.iskeyPressed(GameLib.KEY_LEFT))
-            self.setX(self.getX() - delta * this.vx());
+            self.setX(self.getX() - delta * this.vx);
         if (GameLib.iskeyPressed(GameLib.KEY_RIGHT))
-            self.setX(self.getX() + delta * this.vx());
+            self.setX(self.getX() + delta * this.vx);
 
         // Lógica de manter o jogador dentro da tela, também de Main.processInput()
         if (self.getX() < 0.0) self.setX(0.0);

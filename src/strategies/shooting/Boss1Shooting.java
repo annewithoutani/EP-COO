@@ -13,19 +13,6 @@ public class Boss1Shooting implements IShooting {
 
     @Override
     public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {        
-        // Lógica de tiro
-        if (currentTime > self.getShoot()) {
-            int free = Main.findFreeIndex(projectiles);
-            if (free < projectiles.size()) {
-                Projectile p = projectiles.get(free);
-                p.setX(self.getX());
-                p.setY(self.getY());
-                p.setVX(0.0);
-                p.setVY(0.35); // Tiro reto para baixo
-                p.setState(Main.ACTIVE);
-                
-                self.setShoot(currentTime + 150); // Define o tempo para o próximo disparo
-            }
-        }
+        // TODO
     }
 }

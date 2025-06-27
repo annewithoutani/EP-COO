@@ -1,6 +1,7 @@
 package entities;
 
 import core.Main;
+import lib.GameLib;
 import strategies.IMovement;
 
 public abstract class Entity {
@@ -30,7 +31,7 @@ public abstract class Entity {
         }
     }
 
-    public abstract void move(long delta) {
+    public void move(long delta) {
         if (this.state == Main.ACTIVE && this.movement != null) {
             this.movement.move(this, delta);
         }
@@ -41,7 +42,7 @@ public abstract class Entity {
     }
 
     /** Define que a entidade deve saber como quer ser desenhada **/
-    public abstract void draw(long currentTime);
+    public abstract void draw();
     
     /** Verifica se saiu da tela **/
     public boolean isOffScreen() {
@@ -49,19 +50,22 @@ public abstract class Entity {
     }
 
     /** Faz a verificação do estado e chama o método draw da subclasse **/
-    public final void render(long currentTime){
+    public final void render(){
         if(this.state == Main.ACTIVE || this.state == Main.EXPLODING){
-            draw(currentTime);
+            draw();
         }
     }
 
     // --- GETTERS E SETTERS PARA OS ATRIBUTOS --- //
 
-    public int getState()               return state;
-    public void setState(int state)     this.state = state;
-    public double getX()                return X;
-    public void setX(double X)          this.X = X;
-    public double getY()                return Y;
-    public void setY(double Y)          this.Y = Y;
-    public double getRadius()           return radius;
+    public void setState(int state)     {this.state = state;}
+    public int getState()               {return state;}
+    
+    public void setX(double X)          {this.X = X;}
+    public double getX()                {return X;}
+
+    public void setY(double Y)          {this.Y = Y;}
+    public double getY()                {return Y;}
+
+    public double getRadius()           {return radius;}
 }

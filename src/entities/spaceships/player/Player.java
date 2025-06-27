@@ -16,16 +16,16 @@ public class Player extends Spaceship {
     private long flashEndTime; // Tempo de fim do efeito de piscagem
     private ArrayList<Projectile> projectiles;
 
-    public Player(int initialHp, ArrayList<Projectile> projectiles) {
+    public Player(int maxHp, ArrayList<Projectile> projectiles) {
         // Chama o construtor da classe Entity
         super(GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90, Main.ACTIVE, 12.00);
                 
-        setHealth(new Health(initialHp));
+        this.maxHP = maxHP;
+        setHealth(maxHp);
         setMovement(new PlayerMovement());
-        setShooting(new PlayerShooting(projectiles));
+        setShooting(new PlayerShooting());
 
         this.projectiles = projectiles;
-        setShooting(new PlayerShooting(this.projectiles));
         this.isFlashing = false; // Inicializa o estado de piscagem
         this.flashEndTime = 0; // Inicializa o tempo de fim da piscagem
     }
@@ -36,13 +36,13 @@ public class Player extends Spaceship {
             // Se o tempo atual for maior que o tempo de fim da explosão, restaura o jogador
             if (currentTime > exEnd) {
                 setState(Main.ACTIVE); // Define o estado do jogador como ativo
-                hp = maxHP;
+                hp = this.maxHP;
                 setX(GameLib.WIDTH / 2); // Reposiciona o jogador na coordenada inicial X
                 setY(GameLib.HEIGHT * 0.90); // Reposiciona o jogador na coordenada inicial Y
             }
         } else {
             this.move(delta);
-            this.shoot(currentTime, enemyProjectiles);
+            this.shoot(currentTime, projectiles);
         }
 
         if (isFlashing && currentTime > flashEndTime) {
@@ -57,7 +57,6 @@ public class Player extends Spaceship {
     }
 
     // Método para renderizar o jogador na tela
-    @Override
     public void draw(long currentTime) {
         if (getState() == Main.EXPLODING) {
             double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());

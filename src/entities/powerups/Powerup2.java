@@ -12,7 +12,7 @@ public class Powerup2 extends Powerup {
     // Método para desenhar o power-up na tela
     // (chamado por render() da classe Entidade)
     @Override
-    public void draw(long currentTime) {
+    public void draw() {
         GameLib.setColor(Color.CYAN);
         GameLib.drawDiamond(getX(), getY(), getRadius());
     }
