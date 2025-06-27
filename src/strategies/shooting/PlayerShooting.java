@@ -19,7 +19,6 @@ public class PlayerShooting implements IShooting {
         if (GameLib.iskeyPressed(GameLib.KEY_CONTROL)) {
             if (currentTime > nextShot) {
                 int free = Main.findFreeIndex(projectiles);
-                System.out.println(projectiles.size());
                 if (free < projectiles.size()) {
                     Projectile p = projectiles.get(free);
                     p.setState(Main.ACTIVE);

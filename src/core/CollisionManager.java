@@ -61,7 +61,7 @@ public class CollisionManager {
             if (distance < (player.getRadius() + e.getRadius()) * 0.8) {
                 player.takeDamage(1);
                 player.explode(currentTime);
-                e.setState(Main.INACTIVE); // Inimigo também é destruído na colisão
+                e.explode(currentTime); // Inimigo também é destruído na colisão
                 
                 // Lógica para piscar ou explodir o jogador
                 if (player.isDead()) {
