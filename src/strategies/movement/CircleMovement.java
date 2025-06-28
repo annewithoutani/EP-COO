@@ -38,6 +38,5 @@ public class CircleMovement implements IMovement {
             rv = 0.0;
             angle = 0.0;
         }
-        System.out.println(self.getX() + ", " + self.getY());
     }
 }
