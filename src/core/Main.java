@@ -27,6 +27,8 @@ public class Main {
 
 	// -------------- ATRIBUTOS PRINCIPAIS -------------- //
 	private Player player; // Instância do jogador
+	private int e2count; // Contador para determinar a "minhoquinha" do inimigo 2
+	private double e2spawnX  = GameLib.WIDTH * 0.20; // Posição inicial do inimigo 2
 	private Background background1; // Primeira camada do fundo
 	private Background background2; // Segunda camada do fundo
 	private long currentTime = System.currentTimeMillis(); // Tempo atual
@@ -52,8 +54,8 @@ public class Main {
 		this.enemyProjectiles = new ArrayList<>(150);
 		this.powerups = new ArrayList<>(5);
 
-		for(int i = 0; i < 50; i++) {playerProjectiles.add(new Projectile(0.0, -20.0, 0.0, 0.0, Color.GREEN));}
-		for(int i = 0; i < 150; i++) {enemyProjectiles.add(new Projectile(0.0, -20, 0.0, 0.0, Color.RED));}
+		for(int i = 0; i < 50; i++) {playerProjectiles.add(new Projectile(-50.0, -50.0, 0.0, 0.0, Color.GREEN));}
+		for(int i = 0; i < 150; i++) {enemyProjectiles.add(new Projectile(-50.0, -50.0, 0.0, 0.0, Color.RED));}
 
 		// Inicializa as entidades principais
 		this.player = new Player(7, playerProjectiles);
@@ -81,11 +83,20 @@ public class Main {
 
 	    // Lançando Inimigos do tipo 2
 	    if (currentTime > nextE2) {
-	    	double spawnX = GameLib.WIDTH * 0.20;
 	    	double spawnY = -10.0;
-	    	Enemy newEnemy = Enemy.createEnemy(Enemy.INIMIGO_2, spawnX, spawnY, 1);
+	    	Enemy newEnemy = Enemy.createEnemy(Enemy.INIMIGO_2, e2spawnX, spawnY, 1);
 	        enemies.add(newEnemy); // Adiciona na lista unificada
-	        nextE2 = currentTime + 7000;
+
+	        e2count++;
+
+	        if (e2count < 10){
+	        	nextE2 = currentTime + 150;
+	        } else {
+	        	e2count = 0;
+	        	if (Math.random() > 0.5) e2spawnX = GameLib.WIDTH * 0.2;
+	        	else e2spawnX = GameLib.WIDTH * 0.8;
+	        	nextE2 = currentTime + 3000 + (long)(Math.random() * 4000);
+	        }
 	    }
 
 	    /* !! para implementar a lógica de spawn dos bosses você

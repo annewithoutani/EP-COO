@@ -3,6 +3,7 @@ package entities;
 import core.Main;
 import lib.GameLib;
 import strategies.IMovement;
+import entities.spaceships.enemies.Enemy2;
 
 public abstract class Entity {
     protected double X, Y, radius;
@@ -46,7 +47,13 @@ public abstract class Entity {
     
     /** Verifica se saiu da tela **/
     public boolean isOffScreen() {
-        return ((getY() < -10) || getY() > GameLib.HEIGHT + 10) || (getX() < 0) || (getX() > GameLib.WIDTH);
+        //if(this instanceof Enemy2) {
+        //    System.out.println(getY() < -15.0);
+        //    System.out.println(getY() > GameLib.HEIGHT + 10.0);
+        //    System.out.println(getX() < 0.0);
+        //    System.out.println(getX() > GameLib.WIDTH);
+        //}
+        return ((getY() < -15.0) || (getY() > GameLib.HEIGHT + 10.0) || (getX() < 0.0) || (getX() > GameLib.WIDTH));
     } 
     
     public final void render(){
