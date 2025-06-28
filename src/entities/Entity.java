@@ -46,10 +46,9 @@ public abstract class Entity {
     
     /** Verifica se saiu da tela **/
     public boolean isOffScreen() {
-        return ((getY() < -15) || getY() > GameLib.HEIGHT + 10) || (getX() < -10) || (getX() > GameLib.WIDTH + 10);
-    }
-
-    /** Faz a verificação do estado e chama o método draw da subclasse **/
+        return ((getY() < -10) || getY() > GameLib.HEIGHT + 10) || (getX() < 0) || (getX() > GameLib.WIDTH);
+    } 
+    
     public final void render(){
         if(this.state == Main.ACTIVE || this.state == Main.EXPLODING){
             draw();
