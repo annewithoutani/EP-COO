@@ -76,7 +76,7 @@ public class Main {
 	    if (currentTime > nextE1) {
 	    	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 10.0;
 	    	double spawnY = -10.0;
-	    	Enemy newEnemy = Enemy.createEnemy(Enemy.INIMIGO_1, spawnX, spawnY, 1);
+	    	Enemy newEnemy = Enemy.createEnemy(Enemy.INIMIGO_1, spawnX, spawnY, 1, currentTime);
 	        enemies.add(newEnemy); // Adiciona na lista unificada
 	        nextE1 = currentTime + 1200;
 	    }
@@ -84,7 +84,7 @@ public class Main {
 	    // Lançando Inimigos do tipo 2
 	    if (currentTime > nextE2) {
 	    	double spawnY = -10.0;
-	    	Enemy newEnemy = Enemy.createEnemy(Enemy.INIMIGO_2, e2spawnX, spawnY, 1);
+	    	Enemy newEnemy = Enemy.createEnemy(Enemy.INIMIGO_2, e2spawnX, spawnY, 1, currentTime);
 	        enemies.add(newEnemy); // Adiciona na lista unificada
 
 	        e2count++;
