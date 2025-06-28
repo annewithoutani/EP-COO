@@ -54,7 +54,7 @@ public abstract class Enemy extends Spaceship {
             }
         } else if (getState() == Main.ACTIVE) {
             if (isOffScreen()) {
-                setState(Main.INACTIVE);
+                this.explode(currentTime);
             } else {
                 this.move(delta);
                 this.shoot(currentTime, enemyProjectiles);
