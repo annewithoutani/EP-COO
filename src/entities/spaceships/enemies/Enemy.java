@@ -26,14 +26,14 @@ public abstract class Enemy extends Spaceship {
     }
 
     // Método para criação de inimigos
-    public static Enemy createEnemy(int type, double X, double Y, int hp){
+    public static Enemy createEnemy(int type, double X, double Y, int hp, long currentTime){
         switch (type){
             case INIMIGO_1:
                 Enemy1 enemy1 = new Enemy1(X, Y);
                 return enemy1;
 
             case INIMIGO_2:
-                Enemy2 enemy2 = new Enemy2(X, Y);
+                Enemy2 enemy2 = new Enemy2(X, Y, currentTime);
                 return enemy2;
 
             case BOSS_1:

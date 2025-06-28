@@ -25,7 +25,7 @@ public class EnemyShooting implements IShooting {
                 p.setState(Main.ACTIVE);
                 
                 // A frequência de tiro é controlada aqui dentro.
-                nextShot = (long) (currentTime + 50 + Math.random() * 500);
+                nextShot = (long) (currentTime + 300 + Math.random() * 400);
             }
         }
     }

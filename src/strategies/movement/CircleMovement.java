@@ -8,8 +8,8 @@ import lib.GameLib;
 public class CircleMovement implements IMovement {
 
     private double speed;
-    private double rv = 10.0; // velocidade de rotação
-    private double angle = 10.0;
+    private double rv = 0.0; // velocidade de rotação
+    private double angle = (3 * Math.PI) / 2;
 
     public CircleMovement(double speed) {
         this.speed = speed;
@@ -17,15 +17,16 @@ public class CircleMovement implements IMovement {
 
     @Override
     public void move(Entity self, long delta) {
+        double prevY = self.getY();
 
-        self.setX(speed * Math.cos(angle) * delta);
-        self.setY(speed * Math.cos(angle) * delta * (-1.0));
+        self.setX(self.getX() + speed * Math.cos(angle) * delta);
+        self.setY(self.getY() - speed * Math.sin(angle) * delta);
 
         angle += rv * delta;
 
         double threshold = GameLib.HEIGHT * 0.30;
         
-        if(self.getY() >= threshold) {
+        if(prevY < threshold && self.getY() >= threshold) {
             if(self.getX() < GameLib.WIDTH / 2) rv = 0.003;
             else rv = -0.003;
         }
@@ -33,9 +34,7 @@ public class CircleMovement implements IMovement {
         if(rv > 0 && Math.abs(angle - 3 * Math.PI) < 0.05){
             rv = 0.0;
             angle = 3 * Math.PI;
-        }
-        
-        if(rv < 0 && Math.abs(angle) < 0.05){            
+        } else if(rv < 0 && Math.abs(angle) < 0.05){            
             rv = 0.0;
             angle = 0.0;
         }

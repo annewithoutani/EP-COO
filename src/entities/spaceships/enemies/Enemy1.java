@@ -17,7 +17,7 @@ public class Enemy1 extends Enemy {
         super(X, Y, Main.ACTIVE, 9.00); // Chama o construtor da classe Enemy com raio 9.00 e estado INACTIVE
         // Configura as estratégias padrão para Enemy1
         this.maxHP = 1;
-        this.setMovement(new StraightMovement(0, 0.12));
+        this.setMovement(new StraightMovement(0, 0.20));
         this.setShooting(new EnemyShooting());
     }
 

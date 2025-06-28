@@ -5,19 +5,19 @@ import core.Main;
 import entities.spaceships.player.Player;
 import entities.projectiles.Projectile;
 import strategies.movement.CircleMovement;
-import strategies.shooting.EnemyShooting;
+import strategies.shooting.TripleShooting;
 import java.awt.Color;
 import java.util.List;
 import java.util.ArrayList;
 
 public class Enemy2 extends Enemy {
     // Construtor da classe Enemy2
-    public Enemy2(double X, double Y) {
+    public Enemy2(double X, double Y, long currentTime) {
         super(X, Y, Main.ACTIVE, 12.00); // Chama o construtor da classe Enemy com raio 12.00 e estado INACTIVE
         // Configura as estratégias padrão para Enemy2
         this.maxHP = 1;
-        this.setMovement(new CircleMovement(0.25));
-        this.setShooting(new EnemyShooting());
+        this.setMovement(new CircleMovement(0.3));
+        this.setShooting(new TripleShooting(currentTime + 2150));
     }
 
     // Método para renderizar o Enemy2
@@ -30,7 +30,7 @@ public class Enemy2 extends Enemy {
         // Renderiza o inimigo se ele estiver ativo
         if (getState() == Main.ACTIVE) {
             GameLib.setColor(Color.MAGENTA);
-            GameLib.drawCircle(getX(), getY(), getRadius());
+            GameLib.drawDiamond(getX(), getY(), getRadius());
         }
     }
 }
