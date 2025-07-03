@@ -1,21 +1,18 @@
 package entities.spaceships.enemies;
 
-import lib.GameLib;
 import core.Main;
-import entities.spaceships.player.Player;
-import entities.projectiles.Projectile;
+import lib.GameLib;
+import java.awt.Color;
 import strategies.movement.CircleMovement;
 import strategies.shooting.TripleShooting;
-import java.awt.Color;
-import java.util.List;
-import java.util.ArrayList;
 
 public class Enemy2 extends Enemy {
     // Construtor da classe Enemy2
     public Enemy2(double X, double Y, long currentTime) {
-        super(X, Y, Main.ACTIVE, 12.00); // Chama o construtor da classe Enemy com raio 12.00 e estado INACTIVE
+        // Chama o construtor da classe Enemy com raio 12.00 e estado INACTIVE
+        super(X, Y, Main.ACTIVE, 12.00);
+        
         // Configura as estratégias padrão para Enemy2
-        this.maxHP = 1;
         this.setMovement(new CircleMovement(0.3));
         this.setShooting(new TripleShooting(currentTime + 2150));
     }

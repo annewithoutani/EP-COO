@@ -1,7 +1,7 @@
 package strategies.movement;
 
-import entities.Entity;
 import lib.GameLib;
+import entities.Entity;
 import strategies.IMovement;
 
 public class ZigZagMovement implements IMovement {

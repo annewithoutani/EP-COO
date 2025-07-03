@@ -1,9 +1,8 @@
 package strategies.movement;
 
-import entities.Entity;
-import entities.spaceships.player.Player;
-import strategies.IMovement;
 import lib.GameLib;
+import entities.Entity;
+import strategies.IMovement;
 
 public class CircleMovement implements IMovement {
 

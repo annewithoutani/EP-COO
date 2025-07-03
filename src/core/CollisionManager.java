@@ -1,19 +1,22 @@
 package core;
 
-import java.util.List;
-import entities.Entity;
 import entities.powerups.*;
 import entities.projectiles.Projectile;
 import entities.spaceships.enemies.Enemy;
 import entities.spaceships.player.Player;
-import entities.powerups.Powerup; // Supondo que você terá uma classe base para Powerups
+import java.util.List;
 
 public class CollisionManager {
 
-    /**
-     * Verifica todas as colisões relevantes no jogo.
-     * Este é o único método público que o Main chamará.
-     */
+    private CollisionManager() {
+        // Construtor privado para evitar instanciação
+    }
+    
+    /*****************************************************
+     * Verifica todas as colisões relevantes no jogo.    *
+     * Este é o único método público que o Main chamará. *
+     *****************************************************/
+    
     public static void checkAllCollisions(Player player, List<Enemy> enemies, 
                                    List<Projectile> playerProjectiles, 
                                    List<Projectile> enemyProjectiles, 
@@ -23,6 +26,7 @@ public class CollisionManager {
         
         if (player.getState() == Main.ACTIVE) {
             checkPlayerVsEnemies(player, enemies, currentTime);
+            checkShieldVsThreats(player, enemies, enemyProjectiles, currentTime);
             checkPlayerVsEnemyProjectiles(player, enemyProjectiles, currentTime);
             checkPlayerVsPowerups(player, powerups, currentTime);
         }
@@ -72,6 +76,36 @@ public class CollisionManager {
             }
         }
     }
+
+    private static void checkShieldVsThreats(Player player, List<Enemy> enemies, List<Projectile> enemyProjectiles, long currentTime) {
+        if (!player.isShieldActive()) return;
+        
+        for (Projectile p : enemyProjectiles) {
+            if (p.getState() != Main.ACTIVE) continue;
+            
+            double dx = player.getX() - p.getX();
+            double dy = player.getY() - p.getY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < (ShieldPowerup.radius + p.getRadius()) * 0.8) {
+                p.setState(Main.INACTIVE); // Projétil é destruído
+                player.startFlashing(currentTime);
+            }
+        }
+
+        for (Enemy e : enemies) {
+            if (e.getState() != Main.ACTIVE) continue;
+            
+            double dx = player.getX() - e.getX();
+            double dy = player.getY() - e.getY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < (ShieldPowerup.radius + e.getRadius()) * 0.8) {
+                e.explode(currentTime); // Inimigo também é destruído na colisão                
+                player.startFlashing(currentTime);
+            }
+        }
+    }
     
     private static void checkPlayerVsEnemyProjectiles(Player player, List<Projectile> enemyProjectiles, long currentTime) {
         for (Projectile p : enemyProjectiles) {
@@ -104,12 +138,7 @@ public class CollisionManager {
 
             if (distance < (player.getRadius() + p.getRadius()) * 0.8) {
                 p.setState(Main.INACTIVE);
-                if (p instanceof Powerup1) {
-                    // TODO: ativar o efeito do powerup 1
-                }
-                else if (p instanceof Powerup2) {
-                    // TODO: ativar o efeito do powerup 2
-                }
+                p.applyEffect(player, currentTime);
             }
         }
     }

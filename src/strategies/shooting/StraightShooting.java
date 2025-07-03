@@ -1,15 +1,13 @@
 package strategies.shooting;
 
 import core.Main;
-import entities.projectiles.Projectile;
-import entities.spaceships.Spaceship;
-import entities.spaceships.player.Player;
-import lib.GameLib;
-import strategies.movement.StraightMovement;
-import strategies.IShooting;
 import java.util.ArrayList;
+import strategies.IShooting;
+import entities.spaceships.Spaceship;
+import entities.projectiles.Projectile;
+import strategies.movement.StraightMovement;
 
-public class EnemyShooting implements IShooting {
+public class StraightShooting implements IShooting {
     private long nextShot = 0;
 
     @Override
@@ -25,7 +23,7 @@ public class EnemyShooting implements IShooting {
                 p.setState(Main.ACTIVE);
                 
                 // A frequência de tiro é controlada aqui dentro.
-                nextShot = (long) (currentTime + 300 + Math.random() * 400);
+                nextShot = (long)(currentTime + 300 + Math.random() * 400);
             }
         }
     }

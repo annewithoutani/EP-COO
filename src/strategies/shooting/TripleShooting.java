@@ -1,13 +1,11 @@
 package strategies.shooting;
 
 import core.Main;
-import entities.projectiles.Projectile;
-import entities.spaceships.Spaceship;
-import entities.spaceships.player.Player;
-import lib.GameLib;
-import strategies.movement.StraightMovement;
-import strategies.IShooting;
 import java.util.ArrayList;
+import strategies.IShooting;
+import entities.spaceships.Spaceship;
+import entities.projectiles.Projectile;
+import strategies.movement.StraightMovement;
 
 public class TripleShooting implements IShooting {
     private long nextShot;

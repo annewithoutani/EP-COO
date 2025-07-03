@@ -1,8 +1,8 @@
 package strategies.movement;
 
 import core.Main;
-import entities.Entity;
 import lib.GameLib;
+import entities.Entity;
 import strategies.IMovement;
 
 public class PlayerMovement implements IMovement {

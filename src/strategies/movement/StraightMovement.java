@@ -1,6 +1,5 @@
 package strategies.movement;
 
-import core.Main;
 import entities.Entity;
 import strategies.IMovement;
 
@@ -15,10 +14,7 @@ public class StraightMovement implements IMovement {
 
     @Override
     public void move(Entity self, long delta) {
-        // Lógica de movimento extraída de Projectile.java
-        if (self.getState() == Main.ACTIVE) {
-            self.setX(self.getX() + this.vx * delta); //
-            self.setY(self.getY() + this.vy * delta); //
-        }
+        self.setX(self.getX() + this.vx * delta);
+        self.setY(self.getY() + this.vy * delta);
     }
 }

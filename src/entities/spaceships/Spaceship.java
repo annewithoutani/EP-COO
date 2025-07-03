@@ -37,6 +37,10 @@ public abstract class Spaceship extends Entity {
         this.hp = this.hp - damage < 0 ? 0 : this.hp - damage;
     }
 
+    public void heal(int healingFactor) {
+        this.hp = this.hp + healingFactor > maxHP ? maxHP : this.hp + healingFactor;
+    }
+
     public boolean isDead() {
         return this.hp <= 0;
     }

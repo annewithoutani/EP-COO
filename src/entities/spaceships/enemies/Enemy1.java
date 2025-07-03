@@ -1,24 +1,20 @@
 package entities.spaceships.enemies;
 
-import lib.GameLib;
 import core.Main;
-
-import entities.spaceships.player.Player;
-import entities.projectiles.Projectile;
-import strategies.movement.StraightMovement;
-import strategies.shooting.EnemyShooting;
-
+import lib.GameLib;
 import java.awt.Color;
-import java.util.ArrayList;
+import strategies.movement.StraightMovement;
+import strategies.shooting.StraightShooting;
 
 public class Enemy1 extends Enemy {
     // Construtor da classe Enemy1
     public Enemy1(double X, double Y) {
-        super(X, Y, Main.ACTIVE, 9.00); // Chama o construtor da classe Enemy com raio 9.00 e estado INACTIVE
+        // Chama o construtor da classe Enemy com raio 9.00 e estado INACTIVE
+        super(X, Y, Main.ACTIVE, 9.00);
+        
         // Configura as estratégias padrão para Enemy1
-        this.maxHP = 1;
         this.setMovement(new StraightMovement(0, 0.20));
-        this.setShooting(new EnemyShooting());
+        this.setShooting(new StraightShooting());
     }
 
     // Método para renderizar o Enemy1

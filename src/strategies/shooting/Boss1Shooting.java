@@ -1,12 +1,11 @@
 package strategies.shooting;
 
 import core.Main;
-import entities.projectiles.Projectile;
-import entities.spaceships.Spaceship;
-import entities.spaceships.player.Player;
-import lib.GameLib;
-import strategies.IShooting;
 import java.util.ArrayList;
+import strategies.IShooting;
+import strategies.movement.*;
+import entities.spaceships.Spaceship;
+import entities.projectiles.Projectile;
 
 public class Boss1Shooting implements IShooting {
     private long nextShot = 0;

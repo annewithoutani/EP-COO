@@ -7,12 +7,15 @@ import entities.projectiles.Projectile;
 import entities.spaceships.Spaceship;
 import strategies.movement.PlayerMovement;
 import strategies.shooting.PlayerShooting;
+import entities.powerups.ShieldPowerup;
 
 import java.awt.Color;
 import java.util.ArrayList;
 
 public class Player extends Spaceship {
     private boolean isFlashing; // Indica se o jogador está piscando devido a dano
+    private boolean shieldActive; //Indica se o jogador está com escudo ativado
+    private long shieldEndTime; // Tempo de fim do efeito de escudo
     private long flashEndTime; // Tempo de fim do efeito de piscagem
     private ArrayList<Projectile> projectiles;
 
@@ -27,6 +30,7 @@ public class Player extends Spaceship {
 
         this.projectiles = projectiles;
         this.isFlashing = false; // Inicializa o estado de piscagem
+        this.shieldActive = false; // Inicializa o estado do escudo
         this.flashEndTime = 0; // Inicializa o tempo de fim da piscagem
     }
 
@@ -48,6 +52,10 @@ public class Player extends Spaceship {
         if (isFlashing && currentTime > flashEndTime) {
             isFlashing = false; // Desativa o efeito de piscagem
         }
+
+        if(shieldActive && currentTime > shieldEndTime) {
+            deactivateShield();
+        }
     }
 
     // Método para iniciar o efeito de piscagem
@@ -62,13 +70,36 @@ public class Player extends Spaceship {
             double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
             GameLib.drawExplosion(getX(), getY(), alpha);
         } else {
-            // Lógica de piscar
-            if (isFlashing) {
-                GameLib.setColor(Color.YELLOW);
-            } else {
+            if (shieldActive) { // Desenha um escudo em volta do jogador
+                if (isFlashing) { // Lógica de piscar
+                    GameLib.setColor(Color.YELLOW);
+                    GameLib.drawCircle(getX(), getY(), ShieldPowerup.radius);
+                } else {
+                    GameLib.setColor(Color.CYAN);
+                    GameLib.drawCircle(getX(), getY(), ShieldPowerup.radius);
+                }
                 GameLib.setColor(Color.BLUE);
+                GameLib.drawPlayer(getX(), getY(), getRadius());
+            } else {
+                if (isFlashing) {
+                    GameLib.setColor(Color.YELLOW);
+                    GameLib.drawPlayer(getX(), getY(), getRadius());
+                } else {
+                    GameLib.setColor(Color.BLUE);
+                    GameLib.drawPlayer(getX(), getY(), getRadius());
+                }
             }
-            GameLib.drawPlayer(getX(), getY(), getRadius());
         }
     }
+
+    public long getShieldEnd()          {return shieldEndTime;}
+    // *get* shield status
+    public boolean isShieldActive()     {return shieldActive;}
+    // *set* shield status true
+    public void activateShield()        {shieldActive = true;}
+    // *set* shield status false
+    public void deactivateShield()      {shieldActive = false;}
+    // *set* end time
+    public void setShieldEndTime(long t){shieldEndTime = t;}
+
 }

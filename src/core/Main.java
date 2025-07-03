@@ -1,22 +1,28 @@
 package core;
 
-import lib.GameLib;
-import core.CollisionManager;
-import java.util.ArrayList;
 import utils.*;
+import lib.GameLib;
 import java.awt.Color;
-
 import entities.Entity;
-import entities.spaceships.player.Player;
+import java.util.Random;
+import java.util.ArrayList;
+import entities.powerups.*;
 import entities.spaceships.enemies.*;
 import entities.projectiles.Projectile;
-import entities.powerups.*;
-import strategies.shooting.*;
-import strategies.movement.*;
+import entities.spaceships.player.Player;
 
-// Para compilar e rodar o programa, utilize os seguintes comandos:
-// 1°: javac -d bin -sourcepath src $(find src -name "*.java")
-// 2°: java -cp bin core.Main
+/***********************************************************************/
+/* Para compilar e rodar:                                              */
+/*    - javac -d bin -sourcepath src $(find src -name "*.java")		   */
+/*    - java -cp bin core.Main 										   */
+/*    																   */
+/* Para jogar:                                                         */
+/*                                                                     */
+/*    - cima, baixo, esquerda, direita: movimentação do player.        */
+/*    - control: disparo de projéteis.                                 */
+/*    - ESC: para sair do jogo.                                        */
+/*                                                                     */
+/***********************************************************************/
 
 public class Main {
 
@@ -26,11 +32,11 @@ public class Main {
 	public static final int EXPLODING = 2;
 
 	// -------------- ATRIBUTOS PRINCIPAIS -------------- //
-	private Player player; // Instância do jogador
+	private final Player player; // Instância do jogador
 	private int e2count; // Contador para determinar a "minhoquinha" do inimigo 2
 	private double e2spawnX  = GameLib.WIDTH * 0.20; // Posição inicial do inimigo 2
-	private Background background1; // Primeira camada do fundo
-	private Background background2; // Segunda camada do fundo
+	private final Background background1; // Primeira camada do fundo
+	private final Background background2; // Segunda camada do fundo
 	private long currentTime = System.currentTimeMillis(); // Tempo atual
 	long delta; // Tempo entre frames
 	boolean running = true; // Flag para indicar se o jogo está em execução
@@ -70,13 +76,33 @@ public class Main {
 		this.nextPowerupTime = currentTime + (long)(Math.random() * 15000);
 	}
 
+	private void launchPowerups(long currentTime) {
+		if (currentTime > nextPowerupTime) {
+	    	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 10.0;
+	    	double spawnY = -10.0;
+	    	Powerup newPowerup;
+	        int rand = new Random().nextInt(3) + 1;
+
+	        if (rand == 1){
+	            newPowerup = new HealthPowerup(spawnX, spawnY);
+	        } else if (rand == 2){
+	            newPowerup = new ShieldPowerup(spawnX, spawnY);
+	        } else {
+	            newPowerup = new FireratePowerup(spawnX, spawnY);
+	        }
+
+	        powerups.add(newPowerup); // Adiciona na lista unificada
+	        nextPowerupTime = currentTime + (long)(Math.random() * 15000);
+	    }
+	}
+
 	// Método para lançar novos inimigos
 	private void launchNewEnemies(long currentTime) {
 	    // Lançando Inimigos do tipo 1
 	    if (currentTime > nextE1) {
 	    	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 10.0;
 	    	double spawnY = -10.0;
-	    	Enemy newEnemy = Enemy.createEnemy(Enemy.INIMIGO_1, spawnX, spawnY, 1, currentTime);
+	    	Enemy newEnemy = new Enemy1(spawnX, spawnY);
 	        enemies.add(newEnemy); // Adiciona na lista unificada
 	        nextE1 = currentTime + 1200;
 	    }
@@ -84,7 +110,7 @@ public class Main {
 	    // Lançando Inimigos do tipo 2
 	    if (currentTime > nextE2) {
 	    	double spawnY = -10.0;
-	    	Enemy newEnemy = Enemy.createEnemy(Enemy.INIMIGO_2, e2spawnX, spawnY, 1, currentTime);
+	    	Enemy newEnemy = new Enemy2(e2spawnX, spawnY, currentTime);
 	        enemies.add(newEnemy); // Adiciona na lista unificada
 
 	        e2count++;
@@ -122,8 +148,6 @@ public class Main {
 	}
 
 	public void gameLoop() {
-		boolean running = true; // Flag para controlar a execução do loop do jogo
-		long delta; // Tempo entre frames
 		currentTime = System.currentTimeMillis(); // Tempo atual em milissegundos
 
 		GameLib.initGraphics(); // Inicializa a biblioteca gráfica
@@ -165,6 +189,9 @@ public class Main {
 			// Lançamento de novos inimigos
 			launchNewEnemies(currentTime);
 
+			// Lançamento de powerups
+			launchPowerups(currentTime);
+
 			// Verificando se o usuário fechou o jogo
 			if (GameLib.iskeyPressed(GameLib.KEY_ESCAPE)) {
 				System.exit(0);
@@ -199,6 +226,10 @@ public class Main {
 		// Desenha inimigos
 		for (Enemy enemy : enemies) {
 			enemy.render(currentTime);
+		}
+
+		for (Powerup powerup : powerups) {
+			powerup.render();
 		}
 
 		// TODO: Renderizar powerups
