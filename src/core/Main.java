@@ -58,7 +58,7 @@ public class Main {
 		this.enemies = new ArrayList<>();
 		this.playerProjectiles = new ArrayList<>(50);
 		this.enemyProjectiles = new ArrayList<>(150);
-		this.powerups = new ArrayList<>(5);
+		this.powerups = new ArrayList<>();
 
 		for(int i = 0; i < 50; i++) {playerProjectiles.add(new Projectile(-50.0, -50.0, 0.0, 0.0, Color.GREEN));}
 		for(int i = 0; i < 150; i++) {enemyProjectiles.add(new Projectile(-50.0, -50.0, 0.0, 0.0, Color.RED));}
@@ -92,7 +92,7 @@ public class Main {
 	        }
 
 	        powerups.add(newPowerup); // Adiciona na lista unificada
-	        nextPowerupTime = currentTime + (long)(Math.random() * 15000);
+	        nextPowerupTime = currentTime + 3000 + (long)(Math.random() * 12000);
 	    }
 	}
 
@@ -125,8 +125,10 @@ public class Main {
 	        }
 	    }
 
-	    /* !! para implementar a lógica de spawn dos bosses você
-	     * pode usar de exemplo o spawn dos inimigos comuns !! */
+	    /************************************************************ 
+	     * !!!! para implementar a lógica de spawn dos bosses você	*
+	     * pode usar de exemplo o spawn dos inimigos comuns !!!!	*
+	     ************************************************************/
 	    // Lançando Boss1
 	    if (currentTime > nextB1) {
 	        // TODO

@@ -64,15 +64,8 @@ public class CollisionManager {
 
             if (distance < (player.getRadius() + e.getRadius()) * 0.8) {
                 player.takeDamage(1);
-                player.explode(currentTime);
+                player.explode(currentTime); // Player explode
                 e.explode(currentTime); // Inimigo também é destruído na colisão
-                
-                // Lógica para piscar ou explodir o jogador
-                if (player.isDead()) {
-                    player.setState(Main.EXPLODING);
-                } else {
-                    player.startFlashing(currentTime);
-                }
             }
         }
     }
@@ -88,7 +81,7 @@ public class CollisionManager {
             double distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < (ShieldPowerup.radius + p.getRadius()) * 0.8) {
-                p.setState(Main.INACTIVE); // Projétil é destruído
+                p.setState(Main.INACTIVE); // Projétil é "destruído"
                 player.startFlashing(currentTime);
             }
         }
@@ -100,8 +93,8 @@ public class CollisionManager {
             double dy = player.getY() - e.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < (ShieldPowerup.radius + e.getRadius()) * 0.8) {
-                e.explode(currentTime); // Inimigo também é destruído na colisão                
+            if (distance < (ShieldPowerup.radius + e.getRadius()) * 1.0) {
+                e.explode(currentTime); // Inimigo é destruído na colisão                
                 player.startFlashing(currentTime);
             }
         }

@@ -54,7 +54,7 @@ public abstract class Entity {
     
     /** Verifica se não está inativo e chama o draw (delegado pela entidade) **/
     public final void render(){
-        if(this.state == Main.ACTIVE || this.state == Main.EXPLODING){
+        if(this.state != Main.INACTIVE){
             draw();
         }
     }
