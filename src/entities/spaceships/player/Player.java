@@ -64,12 +64,34 @@ public class Player extends Spaceship {
         flashEndTime = currentTime + 200; // Define o tempo de fim da piscagem (200 milissegundos)
     }
 
+    public void drawHealthBar() {
+        double barWidth = 100;
+        double barHeight = 10;
+        double healthPercentage = getHealth() / (double) maxHP;
+
+        // Posição fixa do canto esquerdo (não mais centralizada)
+        double barLeftX = 30;  // Margem esquerda
+        double barCenterY = 50 + (barHeight / 2);  // Altura ainda centralizada em Y
+
+        // 1. Fundo vermelho (vida perdida) - desenha a barra completa
+        GameLib.setColor(Color.RED);
+        GameLib.fillRect(barLeftX + (barWidth / 2), barCenterY, barWidth, barHeight);
+
+        // 2. Barra verde (vida atual) - desenha só a parte restante
+        double currentWidth = barWidth * healthPercentage;
+        GameLib.setColor(Color.GREEN);
+        GameLib.fillRect(barLeftX + (currentWidth / 2), barCenterY, currentWidth, barHeight);
+    }
+
     // Método para renderizar o jogador na tela
     public void draw(long currentTime) {
         if (getState() == Main.EXPLODING && currentTime < getExEnd()) {
             double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
             GameLib.drawExplosion(getX(), getY(), alpha);
         } else {
+            // Desenha a barra de vida primeiro (para ficar atrás do jogador se necessário)
+            drawHealthBar();
+
             if (shieldActive) { // Desenha um escudo em volta do jogador
                 if (isFlashing) { // Lógica de piscar
                     GameLib.setColor(Color.YELLOW);

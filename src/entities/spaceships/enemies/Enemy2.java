@@ -11,10 +11,12 @@ public class Enemy2 extends Enemy {
     public Enemy2(double X, double Y, long currentTime) {
         // Chama o construtor da classe Enemy com raio 12.00 e estado INACTIVE
         super(X, Y, Main.ACTIVE, 12.00);
+        this.maxHP = 1;
+        this.hp = 1;
         
         // Configura as estratégias padrão para Enemy2
         this.setMovement(new CircleMovement(0.3));
-        this.setShooting(new TripleShooting(currentTime + 2150));
+        this.setShooting(new TripleShooting(currentTime + 2222));
     }
 
     // Método para renderizar o Enemy2

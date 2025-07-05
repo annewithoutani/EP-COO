@@ -71,8 +71,8 @@ public class Main {
 		// Lógica de spawn
 		this.nextE1 = currentTime + 1000;
 		this.nextE2 = currentTime + 3000;
-		this.nextB1 = currentTime + 20000;
-		this.nextB2 = currentTime + 80000;
+		this.nextB1 = currentTime + 2000;
+		this.nextB2 = currentTime + 20000;
 		this.nextPowerupTime = currentTime + (long)(Math.random() * 15000);
 	}
 
@@ -130,13 +130,17 @@ public class Main {
 	     * pode usar de exemplo o spawn dos inimigos comuns !!!!	*
 	     ************************************************************/
 	    // Lançando Boss1
-	    if (currentTime > nextB1) {
-	        // TODO
+	    if (currentTime > nextB1 && !Boss1.getSpawnStatus()) {
+	    	double spawnY = -10.0;
+	    	Enemy boss1 = new Boss1(0.1, spawnY, 500);
+	        enemies.add(boss1); // Adiciona na lista unificada
 	    }
 
 		// Lançando Boss2
-		if (currentTime > nextB2) {
-			// TODO
+		if (currentTime > nextB2 && !Boss2.getSpawnStatus()) {
+			double spawnY = -10.0;
+	    	Enemy boss2 = new Boss2(0.1, spawnY, 500);
+	        enemies.add(boss2); // Adiciona na lista unificada
 		}
 	}
 
@@ -204,7 +208,14 @@ public class Main {
 
 			// Espera para manter o loop constante
 			busyWait(currentTime + 5);
+
+			removeDeadEnemies();
 		}
+	}
+
+	private void removeDeadEnemies(){
+		enemies.removeIf(e -> e.getState() == Main.INACTIVE);
+		System.out.println(enemies.size());
 	}
 
 	private void render(long delta, long currentTime) {

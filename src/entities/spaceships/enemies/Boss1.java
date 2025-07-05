@@ -1,24 +1,79 @@
 package entities.spaceships.enemies;
 
-import lib.GameLib;
 import core.Main;
+import lib.GameLib;
 import java.awt.Color;
-import java.util.List;
 import java.util.ArrayList;
 import entities.projectiles.Projectile;
-import entities.spaceships.player.Player;
+import strategies.movement.ZigZagMovement;
+import strategies.shooting.TripleShooting;
 
 public class Boss1 extends Enemy {
+    static private boolean hasSpawned = false;
+
     public Boss1(double X, double Y, int maxHP) {
-        // Chama o construtor da classe Enemy com raio 11.00 e estado INACTIVE
-        super(X, Y, Main.ACTIVE, 11.00);
+        super(X, Y, Main.ACTIVE, 15.00); // Raio maior para o boss
         this.maxHP = maxHP;
-        this.setHealth(maxHP);
+        this.hp = maxHP;
+        this.radius = 50.0;
+
+        // Configura estratégias específicas para o Boss
+        this.setMovement(new ZigZagMovement());
+        this.setShooting(new TripleShooting(400));
+
+        hasSpawned = true;
     }
 
-    // TODO: implementar as estratégias de movimento, disparo, e o que mais for necessário
-    
+    @Override
     public void draw(long currentTime) {
-        // TODO
+        if (getState() == Main.EXPLODING) {
+            GameLib.setColor(Color.ORANGE);
+            GameLib.drawDiamond(getX(), getY(), radius * 2); // Explosão maior
+        }
+        else if (getState() == Main.ACTIVE) {
+            // Desenha o boss como um diamante
+            GameLib.setColor(Color.RED);
+            GameLib.drawDiamond(getX(), getY(), radius);
+            GameLib.setColor(Color.ORANGE);
+            GameLib.drawDiamond(getX(), getY(), radius * 0.9);
+            GameLib.setColor(Color.YELLOW);
+            GameLib.drawDiamond(getX(), getY(), radius * 0.8);
+            GameLib.setColor(Color.GREEN);
+            GameLib.drawDiamond(getX(), getY(), radius * 0.7);
+            GameLib.setColor(Color.CYAN);
+            GameLib.drawDiamond(getX(), getY(), radius * 0.6);
+            GameLib.setColor(Color.BLUE);
+            GameLib.drawDiamond(getX(), getY(), radius * 0.5);
+            GameLib.setColor(Color.MAGENTA);
+            GameLib.drawDiamond(getX(), getY(), radius * 0.4);
+            GameLib.setColor(Color.PINK);
+            GameLib.drawDiamond(getX(), getY(), radius * 0.3);
+            GameLib.setColor(Color.RED);
+            GameLib.drawDiamond(getX(), getY(), radius * 0.2);
+
+            // Barra de vida
+            drawHealthBar();
+        }
     }
+
+    private void drawHealthBar() {
+        double healthPercentage = (double) this.hp / maxHP;
+        double barWidth = radius * 2;
+
+        GameLib.setColor(Color.RED);
+        GameLib.fillRect(getX() - barWidth/2, getY() - radius - 10,
+                barWidth * healthPercentage, 5);
+        GameLib.setColor(Color.WHITE);
+        GameLib.fillRect(getX() - barWidth/2, getY() - radius - 10, barWidth, 5);
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        this.hp -= damage;
+        if (this.hp <= 0) {
+            explode(System.currentTimeMillis());
+        }
+    }
+
+    public static boolean getSpawnStatus() {return hasSpawned;}
 }

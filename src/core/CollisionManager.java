@@ -1,8 +1,8 @@
 package core;
 
 import entities.powerups.*;
+import entities.spaceships.enemies.*;
 import entities.projectiles.Projectile;
-import entities.spaceships.enemies.Enemy;
 import entities.spaceships.player.Player;
 import java.util.List;
 
@@ -45,10 +45,15 @@ public class CollisionManager {
                 double distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < e.getRadius()) {
-                    // Causa a explosão do inimigo
-                    e.explode(currentTime);                    
-                    // Desativa o projétil
-                    p.setState(Main.INACTIVE);
+                    if(e instanceof Boss1 || e instanceof Boss2) {
+                        e.takeDamage(5);
+                        p.setState(Main.INACTIVE);
+                    } else {
+                        // Causa a explosão do inimigo
+                        e.explode(currentTime);                    
+                        // Desativa o projétil
+                        p.setState(Main.INACTIVE);
+                    }
                 }
             }
         }
