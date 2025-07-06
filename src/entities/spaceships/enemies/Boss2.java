@@ -6,9 +6,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 import entities.projectiles.Projectile;
 import strategies.movement.ZigZagMovement;
-import strategies.shooting.TripleShooting;
+import strategies.shooting.SpiralShooting;
 
 public class Boss2 extends Enemy {
+    public static long nextSpawnTime = System.currentTimeMillis() + 15000;
     static private boolean hasSpawned = false;
     private final int projectileDamage = 100;
 
@@ -19,7 +20,7 @@ public class Boss2 extends Enemy {
 
         // Configura estratégias específicas para o Boss2 (mais rápido que o Boss1)
         this.setMovement(new ZigZagMovement());
-        this.setShooting(new TripleShooting(300));
+        this.setShooting(new SpiralShooting(47));
 
         hasSpawned = true;
     }

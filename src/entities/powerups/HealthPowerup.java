@@ -10,8 +10,8 @@ public class HealthPowerup extends Powerup {
      * que aumentar a vida não requer continuidade.     *
      ****************************************************/
 
-    public HealthPowerup(double x, double y) {
-        super(x, y);
+    public HealthPowerup(double x, double y, long currentTime) {
+        super(x, y, currentTime);
     }
 
     // Método para desenhar o power-up na tela
