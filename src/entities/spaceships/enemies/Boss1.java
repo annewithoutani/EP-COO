@@ -7,7 +7,7 @@ import strategies.movement.ZigZagMovement;
 import strategies.shooting.GeometricShooting;
 
 public class Boss1 extends Enemy {
-    public static long nextSpawnTime = Main.getCurrentTime() + 80000;
+    public static long nextSpawnTime = Main.getCurrentTime() + 20000;
     static private boolean hasSpawned = false;
 
     public Boss1(double X, double Y, int maxHP) {
@@ -57,14 +57,22 @@ public class Boss1 extends Enemy {
     }
 
     private void drawHealthBar() {
-        double healthPercentage = (double) this.hp / maxHP;
         double barWidth = radius * 2;
+        double barHeight = 8;
+        double healthPercentage = (double) hp / maxHP;
 
+        // Posicionada em cima e à esquerda do boss
+        double barLeftX = this.X;  // Margem esquerda
+        double barCenterY = this.Y - radius - (barHeight * 2);
+
+        // 1. Fundo vermelho (vida perdida) - desenha a barra completa
         GameLib.setColor(Color.RED);
-        GameLib.fillRect(getX() - barWidth/2, getY() - radius - 10,
-                barWidth * healthPercentage, 5);
-        GameLib.setColor(Color.WHITE);
-        GameLib.fillRect(getX() - barWidth/2, getY() - radius - 10, barWidth, 5);
+        GameLib.fillRect(barLeftX, barCenterY, barWidth, barHeight);
+
+        // 2. Barra verde (vida atual) - desenha só a parte restante
+        double healthWidth = barWidth * healthPercentage;
+        GameLib.setColor(Color.MAGENTA);
+        GameLib.fillRect(barLeftX - radius + (healthWidth / 2), barCenterY, healthWidth, barHeight);
     }
 
     public static boolean getSpawnStatus() {return hasSpawned;}

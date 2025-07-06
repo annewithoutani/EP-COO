@@ -67,17 +67,17 @@ public class Player extends Spaceship {
     public void drawHealthBar() {
         double barWidth = 100;
         double barHeight = 10;
-        double healthPercentage = getHealth() / (double) maxHP;
+        double healthPercentage = (double) hp / maxHP;
 
-        // Posição fixa do canto esquerdo (não mais centralizada)
+        // Posição fixa do canto esquerdo
         double barLeftX = 30;  // Margem esquerda
-        double barCenterY = 50 + (barHeight / 2);  // Altura ainda centralizada em Y
+        double barCenterY = 50 + (barHeight / 2);  // Altura centralizada em Y
 
-        // 1. Fundo vermelho (vida perdida) - desenha a barra completa
+        // 1. Fundo vermelho (vida perdida)
         GameLib.setColor(Color.RED);
         GameLib.fillRect(barLeftX + (barWidth / 2), barCenterY, barWidth, barHeight);
 
-        // 2. Barra verde (vida atual) - desenha só a parte restante
+        // 2. Barra verde (vida atual)
         double currentWidth = barWidth * healthPercentage;
         GameLib.setColor(Color.GREEN);
         GameLib.fillRect(barLeftX + (currentWidth / 2), barCenterY, currentWidth, barHeight);

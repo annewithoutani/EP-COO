@@ -7,7 +7,7 @@ import strategies.movement.CircleMovement;
 import strategies.shooting.SpiralShooting;
 
 public class Boss2 extends Enemy {
-    public static long nextSpawnTime = Main.getCurrentTime() + 2000;
+    public static long nextSpawnTime = Main.getCurrentTime() + 100000;
     static private boolean hasSpawned = false;
     private final int projectileDamage = 100;
 
@@ -64,14 +64,22 @@ public class Boss2 extends Enemy {
     }
 
     private void drawHealthBar() {
-        double healthPercentage = (double) this.hp / maxHP;
         double barWidth = radius * 2;
+        double barHeight = 8;
+        double healthPercentage = (double) hp / maxHP;
 
-        GameLib.setColor(new Color(200, 0, 200)); // Roxo escuro
-        GameLib.fillRect(getX() - barWidth/2, getY() - radius - 15,
-                barWidth * healthPercentage, 6);
-        GameLib.setColor(Color.CYAN);
-        GameLib.fillRect(getX() - barWidth/2, getY() - radius - 15, barWidth, 6);
+        // Posicionada em cima e à esquerda do boss
+        double barLeftX = this.X;  // Margem esquerda
+        double barCenterY = this.Y - radius - (barHeight * 2);
+
+        // 1. Fundo vermelho (vida perdida) - desenha a barra completa
+        GameLib.setColor(Color.RED);
+        GameLib.fillRect(barLeftX, barCenterY, barWidth, barHeight);
+
+        // 2. Barra verde (vida atual) - desenha só a parte restante
+        double healthWidth = barWidth * healthPercentage;
+        GameLib.setColor(Color.YELLOW);
+        GameLib.fillRect(barLeftX - radius + (healthWidth / 2), barCenterY, healthWidth, barHeight);
     }
 
     public static boolean getSpawnStatus() {return hasSpawned;}

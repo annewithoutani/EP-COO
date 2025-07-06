@@ -88,13 +88,13 @@ public class Main {
 
 	    // Lançando Boss1
 	    if (currentTime > Boss1.nextSpawnTime && !Boss1.getSpawnStatus()) {
-	    	Enemy boss1 = new Boss1(0.0, spawnY, 500);
+	    	Enemy boss1 = new Boss1(0.0, spawnY, 1000);
 	        enemies.add(boss1); // Adiciona na lista unificada
 	    }
 
 		// Lançando Boss2
 		if (currentTime > Boss2.nextSpawnTime && !Boss2.getSpawnStatus()) {
-	    	Enemy boss2 = new Boss2(0.0, spawnY, 500);
+	    	Enemy boss2 = new Boss2(0.0, spawnY, 1500);
 	        enemies.add(boss2); // Adiciona na lista unificada
 		}
 	}

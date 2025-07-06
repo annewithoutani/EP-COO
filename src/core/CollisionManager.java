@@ -80,7 +80,7 @@ public class CollisionManager {
                     e.explode(); // Inimigo também é destruído na colisão                    
                 }
 
-                collisionDamageTime = currentTime + 500;
+                collisionDamageTime = currentTime + 1500;
             }
         }
     }
