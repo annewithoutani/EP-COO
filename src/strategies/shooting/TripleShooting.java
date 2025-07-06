@@ -10,11 +10,11 @@ import strategies.movement.StraightMovement;
 
 public class TripleShooting implements IShooting {
     private long nextShot;
-    private long recoil;
+    private long firerate;
 
     public TripleShooting(long shotTiming) {
         nextShot = shotTiming;
-        recoil = shotTiming;
+        firerate = shotTiming;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class TripleShooting implements IShooting {
                 Projectile p = new Projectile(X, Y, vx, vy, Color.RED);
                 projectiles.add(p);
 
-                nextShot = currentTime + recoil + (long)(Math.random() * 200);
+                nextShot = currentTime + firerate + (long)(Math.random() * 200);
             }
         }
     }
