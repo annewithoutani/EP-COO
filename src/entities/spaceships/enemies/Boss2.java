@@ -33,10 +33,32 @@ public class Boss2 extends Enemy {
             GameLib.setColor(new Color(200, 0, 200, (int)(alpha * 255)));
         }
         else {
-            // Desenha o boss como um triângulo (formato diferente do Boss1)
-            GameLib.setColor(Color.RED); // Roxo escuro
-            GameLib.drawDiamond(this.X, this.Y, radius);
-            // Barra de vida
+            // Corpo da galinha
+            double leftX = this.X - radius;
+            double topY = this.Y - radius;
+            double rightX = this.X + radius;
+            double bottomY = this.Y + radius;
+            GameLib.setColor(Color.WHITE);
+            GameLib.drawLine(leftX, topY, rightX, topY);
+            GameLib.drawLine(leftX, bottomY, rightX, bottomY);
+            GameLib.drawLine(leftX, topY, leftX, bottomY);
+            GameLib.drawLine(rightX, topY, rightX, bottomY);
+            // Asas da galinha
+            double wingRadius = radius * 0.6;
+            double X1 = this.X - radius - wingRadius;
+            double X2 = this.X + radius + wingRadius;
+            GameLib.drawDiamond(X1, this.Y, wingRadius);
+            GameLib.drawDiamond(X1 - 10, this.Y, wingRadius);
+            GameLib.drawDiamond(X2, this.Y, wingRadius);
+            GameLib.drawDiamond(X2 + 10, this.Y, wingRadius);
+            // Olhos da galinha
+            GameLib.setColor(Color.RED);
+            GameLib.drawCircle(this.X - radius * 0.7, this.Y - radius * 0.1, radius * 0.2);
+            GameLib.drawCircle(this.X + radius * 0.7, this.Y - radius * 0.1, radius * 0.2);
+            // Bico da galinha
+            GameLib.setColor(Color.YELLOW);
+            GameLib.drawDiamond(this.X, this.Y + radius, radius * 0.3);
+
             drawHealthBar();
         }
     }
