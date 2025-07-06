@@ -7,13 +7,11 @@ import entities.spaceships.enemies.Enemy2;
 
 public abstract class Entity {
     protected double X, Y, radius;
-    protected int state;
     protected IMovement movement;
 
-    public Entity(double X, double Y, int state, double radius) {
+    public Entity(double X, double Y, double radius) {
         this.X = X;
         this.Y = Y;
-        this.state = state;
         this.radius = radius;
         this.movement = null;
     }
@@ -23,18 +21,12 @@ public abstract class Entity {
     // - caso sim: deixa ela inativa
     // - caso não: movimenta ela de acordo com sua estratégia
     public void update(long currentTime, long delta) {
-        if (getState() == Main.ACTIVE) {
-            if (isOffScreen()) {
-                setState(Main.INACTIVE);
-            } else {
-                this.move(delta);
-            }
-        }
+        this.move(delta);
     }
 
     /** Se ativo, faz a movimentação com base na estratégia **/
     public void move(long delta) {
-        if (this.state == Main.ACTIVE && this.movement != null) {
+        if (this.movement != null) {
             this.movement.move(this, delta);
         }
     }
@@ -54,16 +46,10 @@ public abstract class Entity {
     
     /** Verifica se não está inativo e chama o draw (delegado pela entidade) **/
     public final void render(){
-        if(this.state != Main.INACTIVE){
-            draw();
-        }
+        draw();
     }
 
     // --- GETTERS E SETTERS PARA OS ATRIBUTOS --- //
-
-    public void setState(int state)     {this.state = state;}
-    public int getState()               {return state;}
-    
     public void setX(double X)          {this.X = X;}
     public double getX()                {return X;}
 

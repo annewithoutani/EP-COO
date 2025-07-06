@@ -10,23 +10,14 @@ public abstract class Enemy extends Spaceship {
     private long shoot; // Tempo do próximo disparo do inimigo
 
     // Construtor da classe Enemy
-    public Enemy(double X, double Y, int state, double radius) {
-        super(X, Y, state, radius); // Chama o construtor da classe Entity
+    public Enemy(double X, double Y, double radius) {
+        super(X, Y, radius); // Chama o construtor da classe Entity
     }
 
     public final void update(long delta, long currentTime, ArrayList<Projectile> enemyProjectiles) {
-        if (getState() == Main.EXPLODING) {
-            if (currentTime > getExEnd()) {
-                setState(Main.INACTIVE);
-            }
-        } else if (getState() == Main.ACTIVE) {
-            if (isOffScreen()) {
-                // Por motivos puramente estéticos (achei bonitinho)
-                this.explode(currentTime);
-            } else {
-                this.move(delta);
-                this.shoot(currentTime, enemyProjectiles);
-            }
+        if (!this.exploding) {
+            this.move(delta);
+            this.shoot(currentTime, enemyProjectiles);
         }
     }
 }

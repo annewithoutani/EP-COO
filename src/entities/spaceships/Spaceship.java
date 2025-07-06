@@ -8,14 +8,15 @@ import entities.projectiles.Projectile;
 import java.util.ArrayList;
 
 public abstract class Spaceship extends Entity {
-    protected double exStart;         // Tempo de início da explosão
-    protected double exEnd;           // Tempo de fim da explosão
-    protected int hp;                 // Pontos de vida
-    protected int maxHP;              // Pontos de vida máximos
-    protected IShooting shooting;     // Estratégia de tiro
+    protected boolean exploding = false;    // A espaçonave está explodindo?
+    protected double exStart;               // Tempo de início da explosão
+    protected double exEnd;                 // Tempo de fim da explosão
+    protected int hp;                       // Pontos de vida
+    protected int maxHP;                    // Pontos de vida máximos
+    protected IShooting shooting;           // Estratégia de tiro
 
-    public Spaceship(double X, double Y, int state, double radius) {
-        super(X, Y, state, radius);
+    public Spaceship(double X, double Y, double radius) {
+        super(X, Y, radius);
         this.shooting = null;
     }
 
@@ -24,10 +25,13 @@ public abstract class Spaceship extends Entity {
     public abstract void draw(long currentTime);
 
     public final void render(long currentTime) {
-        if (getState() == Main.EXPLODING && currentTime < getExEnd()) {
-            double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
-            GameLib.drawExplosion(getX(), getY(), alpha);
-        } else if (getState() == Main.ACTIVE) {
+        if (this.exploding) {
+            // Este if deve ser interno para impedir que as naves pisquem depois de explodir
+            if (currentTime < getExEnd()) {
+                double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
+                GameLib.drawExplosion(getX(), getY(), alpha);
+            }
+        } else {
             // Delega o desenho para a subclasse
             this.draw(currentTime);
         }
@@ -46,7 +50,7 @@ public abstract class Spaceship extends Entity {
     }
 
     public void explode(long currentTime) {
-        this.state = Main.EXPLODING;
+        this.exploding = true;
         this.exStart = currentTime;
         this.exEnd = currentTime + 500;
     }
@@ -55,6 +59,8 @@ public abstract class Spaceship extends Entity {
         this.shooting.shoot(this, currentTime, projectiles);
     }
     // --- GETTERS E SETTERS PARA OS ATRIBUTOS --- //
+
+    public boolean isExploding()                 {return exploding;}
 
     // Tempo de início da explosão
     public void setExStart(double exStart)      {this.exStart = exStart;}

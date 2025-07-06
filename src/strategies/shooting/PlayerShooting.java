@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import strategies.IShooting;
 import entities.spaceships.Spaceship;
+import entities.spaceships.player.Player;
 import entities.projectiles.Projectile;
 import strategies.movement.StraightMovement;
 
@@ -17,7 +18,10 @@ public class PlayerShooting implements IShooting {
 
     @Override
     public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {
-        if (self.getState() != Main.ACTIVE) return;
+        if (self instanceof Player) {
+            Player p = (Player)self;
+            if (p.isExploding()) return;
+        }
         
         // Lógica de tiro
         if (GameLib.iskeyPressed(GameLib.KEY_CONTROL)) {

@@ -13,7 +13,7 @@ public class Boss1 extends Enemy {
     static private boolean hasSpawned = false;
 
     public Boss1(double X, double Y, int maxHP) {
-        super(X, Y, Main.ACTIVE, 50.00); // Raio maior para o boss
+        super(X, Y, 50.00); // Raio maior para o boss
         this.maxHP = maxHP;
         this.hp = maxHP;
 
@@ -26,11 +26,11 @@ public class Boss1 extends Enemy {
 
     @Override
     public void draw(long currentTime) {
-        if (getState() == Main.EXPLODING) {
+        if (this.exploding) {
             GameLib.setColor(Color.ORANGE);
             GameLib.drawDiamond(getX(), getY(), radius * 2); // Explosão maior
         }
-        else if (getState() == Main.ACTIVE) {
+        else {
             // Desenha o boss como um diamante
             GameLib.setColor(Color.RED);
             GameLib.drawDiamond(getX(), getY(), radius);

@@ -3,6 +3,7 @@ package strategies.movement;
 import core.Main;
 import lib.GameLib;
 import entities.Entity;
+import entities.spaceships.player.Player;
 import strategies.IMovement;
 
 public class PlayerMovement implements IMovement {
@@ -11,7 +12,10 @@ public class PlayerMovement implements IMovement {
 
     @Override
     public void move(Entity self, long delta) {
-        if (self.getState() != Main.ACTIVE) return;
+        if (self instanceof Player) {
+            Player p = (Player)self;
+            if (p.isExploding()) return;
+        }
         
         // Lógica de movimento extraída de Main.processInput()
         if (GameLib.iskeyPressed(GameLib.KEY_UP))

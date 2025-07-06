@@ -11,8 +11,7 @@ public class Enemy1 extends Enemy {
 
     // Construtor da classe Enemy1
     public Enemy1(double X, double Y, long currentTime) {
-        // Chama o construtor da classe Enemy com raio 9.00 e estado INACTIVE
-        super(X, Y, Main.ACTIVE, 9.00);
+        super(X, Y, 9.00);
         this.maxHP = 1;
         this.hp = 1;
         
@@ -26,14 +25,13 @@ public class Enemy1 extends Enemy {
     // Método para renderizar o Enemy1
     public void draw(long currentTime) {
         // Renderiza a explosão se o inimigo estiver explodindo
-        if (getState() == Main.EXPLODING) {
+        if (this.exploding) {
             double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
             GameLib.drawExplosion(getX(), getY(), alpha);
-        }
-        // Renderiza o inimigo se ele estiver ativo
-        if (getState() == Main.ACTIVE) {
+        } else {
             GameLib.setColor(Color.CYAN);
             GameLib.drawCircle(getX(), getY(), getRadius());
         }
+
     }
 }

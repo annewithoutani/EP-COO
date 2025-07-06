@@ -24,11 +24,6 @@ import entities.spaceships.player.Player;
 /***********************************************************************/
 
 public class Main {
-	// ------------------- CONSTANTES ------------------- //
-	public static final int INACTIVE = 0;
-	public static final int ACTIVE = 1;
-	public static final int EXPLODING = 2;
-
 	// -------------- ATRIBUTOS PRINCIPAIS -------------- //
 	private final Player player; // Instância do jogador
 	private final Background background1; // Primeira camada do fundo
@@ -161,7 +156,7 @@ public class Main {
 			// Espera para manter o loop constante
 			busyWait(currentTime + 5);
 
-			removeDeadEnemies();
+			removeGarbage();
 		}
 	}
 
@@ -196,8 +191,11 @@ public class Main {
 		GameLib.display();
 	}
 
-	private void removeDeadEnemies(){
-		enemies.removeIf(e -> e.getState() == Main.INACTIVE);
+	private void removeGarbage(){
+		enemies.removeIf(e -> currentTime > e.getExEnd() && e.isExploding());
+		enemies.removeIf(e -> e.isOffScreen());
+		enemyProjectiles.removeIf(p -> p.isOffScreen());
+		playerProjectiles.removeIf(p -> p.isOffScreen());
 	}
 	
 	// Método para manter a taxa de quadros constante

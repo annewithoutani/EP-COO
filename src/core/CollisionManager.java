@@ -24,7 +24,7 @@ public class CollisionManager {
         
         checkPlayerProjectilesVsEnemies(playerProjectiles, enemies, currentTime);
         
-        if (player.getState() != Main.EXPLODING) {
+        if (!player.isExploding()) {
             checkPlayerVsEnemies(player, enemies, currentTime);
             checkShieldVsThreats(player, enemies, enemyProjectiles, currentTime);
             checkPlayerVsEnemyProjectiles(player, enemyProjectiles, currentTime);
@@ -38,7 +38,7 @@ public class CollisionManager {
         playerProjectiles.removeIf(p -> {
             boolean shouldRemove = false;
             for (Enemy e : enemies) {
-                if (e.getState() == Main.EXPLODING) continue;
+                if (e.isExploding()) continue;
 
                 // Lógica de cálculo de distância
                 double dx = p.getX() - e.getX();
@@ -60,7 +60,7 @@ public class CollisionManager {
     
     private static void checkPlayerVsEnemies(Player player, List<Enemy> enemies, long currentTime) {
         for (Enemy e : enemies) {
-            if (e.getState() == Main.EXPLODING) continue;
+            if (e.isExploding()) continue;
             
             double dx = player.getX() - e.getX();
             double dy = player.getY() - e.getY();
@@ -92,7 +92,7 @@ public class CollisionManager {
         });
 
         for (Enemy e : enemies) {
-            if (e.getState() == Main.EXPLODING) continue;
+            if (e.isExploding()) continue;
             
             double dx = player.getX() - e.getX();
             double dy = player.getY() - e.getY();
