@@ -6,9 +6,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 import entities.projectiles.Projectile;
 import strategies.movement.ZigZagMovement;
-import strategies.shooting.TripleShooting;
+import strategies.shooting.GeometricShooting;
 
 public class Boss1 extends Enemy {
+    public static long nextSpawnTime = System.currentTimeMillis() + 2000;
     static private boolean hasSpawned = false;
 
     public Boss1(double X, double Y, int maxHP) {
@@ -18,7 +19,7 @@ public class Boss1 extends Enemy {
 
         // Configura estratégias específicas para o Boss
         this.setMovement(new ZigZagMovement());
-        this.setShooting(new TripleShooting(400));
+        this.setShooting(new GeometricShooting(400, 5));
 
         hasSpawned = true;
     }
