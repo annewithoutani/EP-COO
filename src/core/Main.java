@@ -96,8 +96,8 @@ public class Main {
 	private void launchNewEnemies(long currentTime) {
 	    // Lançando Inimigos do tipo 1
 	    if (currentTime > nextE1) {
-	    	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 10.0;
-	    	double spawnY = -10.0;
+	    	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 9.0;
+	    	double spawnY = 0.0;
 	    	Enemy newEnemy = new Enemy1(spawnX, spawnY);
 	        enemies.add(newEnemy); // Adiciona na lista unificada
 	        nextE1 = currentTime + 1200;

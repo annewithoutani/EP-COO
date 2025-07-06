@@ -13,10 +13,9 @@ public class Boss2 extends Enemy {
     private final int projectileDamage = 100;
 
     public Boss2(double X, double Y, int maxHP) {
-        super(X, Y, Main.ACTIVE, 20.00); // Raio maior para o boss
+        super(X, Y, Main.ACTIVE, 50.00); // Raio maior para o boss
         this.maxHP = maxHP;
         this.hp = maxHP;
-        this.radius = 20.0;
 
         // Configura estratégias específicas para o Boss2 (mais rápido que o Boss1)
         this.setMovement(new ZigZagMovement());

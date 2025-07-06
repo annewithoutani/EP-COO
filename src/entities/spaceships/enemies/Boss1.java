@@ -12,10 +12,9 @@ public class Boss1 extends Enemy {
     static private boolean hasSpawned = false;
 
     public Boss1(double X, double Y, int maxHP) {
-        super(X, Y, Main.ACTIVE, 15.00); // Raio maior para o boss
+        super(X, Y, Main.ACTIVE, 50.00); // Raio maior para o boss
         this.maxHP = maxHP;
         this.hp = maxHP;
-        this.radius = 50.0;
 
         // Configura estratégias específicas para o Boss
         this.setMovement(new ZigZagMovement());
