@@ -1,5 +1,6 @@
 package entities.powerups;
 
+import core.Main;
 import lib.GameLib;
 import java.awt.Color;
 import entities.spaceships.player.Player;
@@ -12,8 +13,8 @@ public class ShieldPowerup extends Powerup {
     private long duration;
     public static final double radius = 37.0;
 
-    public ShieldPowerup(double x, double y, long currentTime) {
-        super(x, y, currentTime);
+    public ShieldPowerup(double x, double y) {
+        super(x, y);
         duration = 5000;
     }
 
@@ -25,8 +26,8 @@ public class ShieldPowerup extends Powerup {
         GameLib.drawDiamond(getX(), getY(), getRadius());
     }
 
-    public void applyEffect(Player target, long currentTime) {
+    public void applyEffect(Player target) {
         target.activateShield();
-        target.setShieldEndTime(currentTime + duration);
+        target.setShieldEndTime(Main.getCurrentTime() + duration);
     }
 }

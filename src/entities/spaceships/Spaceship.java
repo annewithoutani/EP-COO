@@ -3,9 +3,9 @@ package entities.spaceships;
 import core.Main;
 import lib.GameLib;
 import entities.Entity;
+import java.util.ArrayList;
 import strategies.IShooting;
 import entities.projectiles.Projectile;
-import java.util.ArrayList;
 
 public abstract class Spaceship extends Entity {
     protected boolean exploding = false;    // A espaçonave está explodindo?
@@ -20,11 +20,9 @@ public abstract class Spaceship extends Entity {
         this.shooting = null;
     }
 
-    /** Sobrescreve o draw() de Entity para usar o parâmetro currentTime **/
-    public void draw() {}
-    public abstract void draw(long currentTime);
+    public void render() {
+        long currentTime = Main.getCurrentTime();
 
-    public final void render(long currentTime) {
         if (this.exploding) {
             // Este if deve ser interno para impedir que as naves pisquem depois de explodir
             if (currentTime < getExEnd()) {
@@ -33,12 +31,13 @@ public abstract class Spaceship extends Entity {
             }
         } else {
             // Delega o desenho para a subclasse
-            this.draw(currentTime);
+            this.draw();
         }
     }
 
     public void takeDamage(int damage) {
         this.hp = this.hp - damage < 0 ? 0 : this.hp - damage;
+        if (this.hp == 0) explode();
     }
 
     public void heal(int healingFactor) {
@@ -49,14 +48,15 @@ public abstract class Spaceship extends Entity {
         return this.hp <= 0;
     }
 
-    public void explode(long currentTime) {
+    public void explode() {
+        long currentTime = Main.getCurrentTime();
         this.exploding = true;
         this.exStart = currentTime;
         this.exEnd = currentTime + 500;
     }
 
-    protected void shoot(long currentTime,  ArrayList<Projectile> projectiles) {
-        this.shooting.shoot(this, currentTime, projectiles);
+    protected void shoot(ArrayList<Projectile> projectiles) {
+        this.shooting.shoot(this, projectiles);
     }
     // --- GETTERS E SETTERS PARA OS ATRIBUTOS --- //
 

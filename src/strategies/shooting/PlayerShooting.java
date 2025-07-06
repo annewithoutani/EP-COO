@@ -17,7 +17,9 @@ public class PlayerShooting implements IShooting {
     private boolean superfire = false;
 
     @Override
-    public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {
+    public void shoot(Spaceship self, ArrayList<Projectile> projectiles) {
+        long currentTime = Main.getCurrentTime();
+
         if (self instanceof Player) {
             Player p = (Player)self;
             if (p.isExploding()) return;
@@ -44,9 +46,9 @@ public class PlayerShooting implements IShooting {
     }
 
     // *set* o status do powerup como true
-    public void activateSuperfire(long currentTime, long duration) {
+    public void activateSuperfire(long duration) {
         this.superfire = true;
-        this.superfireEndTime = currentTime + duration;
+        this.superfireEndTime = Main.getCurrentTime() + duration;
     }
     // *set* o status do powerup como false
     public void deactivateSuperfire()               {this.superfire = false;}

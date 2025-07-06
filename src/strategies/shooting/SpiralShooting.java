@@ -13,12 +13,14 @@ public class SpiralShooting implements IShooting {
     private final long firerate;
 
     public SpiralShooting(long firerate) {
-        this.nextShot = System.currentTimeMillis() + firerate;
+        this.nextShot = Main.getCurrentTime() + firerate;
         this.firerate = firerate;
     }
 
     @Override
-    public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {
+    public void shoot(Spaceship self, ArrayList<Projectile> projectiles) {
+        long currentTime = Main.getCurrentTime();
+        
         if (currentTime > nextShot) {
             double X = self.getX();
             double Y = self.getY();

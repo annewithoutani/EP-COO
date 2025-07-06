@@ -2,7 +2,6 @@ package core;
 
 import utils.*;
 import lib.GameLib;
-import entities.Entity;
 import java.util.Random;
 import java.util.ArrayList;
 import entities.powerups.*;
@@ -29,7 +28,7 @@ public class Main {
 	private final Background background1; // Primeira camada do fundo
 	private final Background background2; // Segunda camada do fundo
 	private final double spawnY = 0.0; // Posição Y na qual inimigos e powerups surgem
-	private long currentTime = System.currentTimeMillis(); // Tempo atual
+	private static long currentTime = System.currentTimeMillis(); // Tempo atual
 	long delta; // Tempo entre frames
 	boolean running = true; // Flag para indicar se o jogo está em execução
 
@@ -53,7 +52,7 @@ public class Main {
 		this.background2 = new Background(0, 0.045, 50, 3);
 	}
 
-	private void launchPowerups(long currentTime) {
+	private void launchPowerups() {
 		if (currentTime > Powerup.nextSpawnTime) {
 	    	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 10.0;
 	    	double spawnY = -10.0;
@@ -61,11 +60,11 @@ public class Main {
 	        int rand = new Random().nextInt(3) + 1;
 
 	        if (rand == 1){
-	            newPowerup = new HealthPowerup(spawnX, spawnY, currentTime);
+	            newPowerup = new HealthPowerup(spawnX, spawnY);
 	        } else if (rand == 2){
-	            newPowerup = new ShieldPowerup(spawnX, spawnY, currentTime);
+	            newPowerup = new ShieldPowerup(spawnX, spawnY);
 	        } else {
-	            newPowerup = new FireratePowerup(spawnX, spawnY, currentTime);
+	            newPowerup = new FireratePowerup(spawnX, spawnY);
 	        }
 
 	        powerups.add(newPowerup); // Adiciona na lista unificada
@@ -73,17 +72,17 @@ public class Main {
 	}
 
 	// Método para lançar novos inimigos
-	private void launchNewEnemies(long currentTime) {
+	private void launchNewEnemies() {
 	    // Lançando Inimigos do tipo 1
 	    if (currentTime > Enemy1.nextSpawnTime) {
 	    	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 9.0;
-	    	Enemy newEnemy = new Enemy1(spawnX, spawnY, currentTime);
+	    	Enemy newEnemy = new Enemy1(spawnX, spawnY);
 	        enemies.add(newEnemy); // Adiciona na lista unificada
 	    }
 
 	    // Lançando Inimigos do tipo 2
 	    if (currentTime > Enemy2.nextSpawnTime) {
-	    	Enemy newEnemy = new Enemy2(Enemy2.spawnX, spawnY, currentTime);
+	    	Enemy newEnemy = new Enemy2(Enemy2.spawnX, spawnY);
 	        enemies.add(newEnemy); // Adiciona na lista unificada
 	    }
 
@@ -101,9 +100,8 @@ public class Main {
 	}
 
 	public void gameLoop() {
-		currentTime = System.currentTimeMillis(); // Tempo atual em milissegundos
-
 		GameLib.initGraphics(); // Inicializa a biblioteca gráfica
+		currentTime = System.currentTimeMillis();
 
 		// Loop principal do jogo
 		while (running) {
@@ -115,35 +113,35 @@ public class Main {
 			// Verificação de colisões
 			CollisionManager.checkAllCollisions(player, enemies, 
                                    playerProjectiles, enemyProjectiles, 
-                                   powerups, currentTime);
+                                   powerups);
 
-			player.update(currentTime, delta);
+			player.update(delta);
 
 			// Atualizações de estados dos projéteis do jogador
 			for (Projectile projectile : playerProjectiles) {
-				projectile.update(currentTime, delta);
+				projectile.update(delta);
 			}
 
 			// Atualizações de estados dos projéteis dos inimigos
 			for (Projectile projectile : enemyProjectiles) {
-				projectile.update(currentTime, delta);
+				projectile.update(delta);
 			}
 
 			// Atualizações de estados dos inimigos
 			for (Enemy enemy : enemies) {
-				enemy.update(delta, currentTime, enemyProjectiles);
+				enemy.update(delta, enemyProjectiles);
 			}
 
 			// Atualizações de estados dos powerups
 			for (Powerup powerup : powerups) {
-				powerup.update(currentTime, delta);
+				powerup.update(delta);
 			}
 
 			// Lançamento de novos inimigos
-			launchNewEnemies(currentTime);
+			launchNewEnemies();
 
 			// Lançamento de powerups
-			launchPowerups(currentTime);
+			launchPowerups();
 
 			// Verificando se o usuário fechou o jogo
 			if (GameLib.iskeyPressed(GameLib.KEY_ESCAPE)) {
@@ -151,7 +149,7 @@ public class Main {
 			}
 
 			// Desenha a cena
-			render(delta, currentTime);
+			render(delta);
 
 			// Espera para manter o loop constante
 			busyWait(currentTime + 5);
@@ -160,13 +158,13 @@ public class Main {
 		}
 	}
 
-	private void render(long delta, long currentTime) {
+	private void render(long delta) {
 		// Desenha o fundo
 		background1.render1(delta);
 		background2.render2(delta);
 
 		// Desenha o player
-		player.render(currentTime);
+		player.render();
 
 		// Desenha projéteis do player
 		for (Projectile projectile : playerProjectiles) {
@@ -180,7 +178,7 @@ public class Main {
 
 		// Desenha inimigos
 		for (Enemy enemy : enemies) {
-			enemy.render(currentTime);
+			enemy.render();
 		}
 
 		for (Powerup powerup : powerups) {
@@ -205,6 +203,10 @@ public class Main {
 			// Libera a CPU para outros processos enquanto espera
 			Thread.yield();
 		}
+	}
+
+	public static long getCurrentTime(){
+		return currentTime;
 	}
 
 	public static void main(String[] args) {

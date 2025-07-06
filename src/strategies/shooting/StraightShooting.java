@@ -12,9 +12,10 @@ public class StraightShooting implements IShooting {
     private long nextShot = 0;
 
     @Override
-    public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {
+    public void shoot(Spaceship self, ArrayList<Projectile> projectiles) {
         double X = self.getX();
         double Y = self.getY();
+        long currentTime = Main.getCurrentTime();
 
         if (currentTime > nextShot) {
             Projectile p = new Projectile(X, Y, 0.0, 0.3, Color.RED);

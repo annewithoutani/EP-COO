@@ -1,7 +1,6 @@
 package strategies;
 
 import entities.Entity;
-import entities.spaceships.player.Player;
 
 /*****************************************************
  * Contrato para todas as estratégias de movimento.  *

@@ -10,8 +10,8 @@ public class HealthPowerup extends Powerup {
      * que aumentar a vida não requer continuidade.     *
      ****************************************************/
 
-    public HealthPowerup(double x, double y, long currentTime) {
-        super(x, y, currentTime);
+    public HealthPowerup(double x, double y) {
+        super(x, y);
     }
 
     // Método para desenhar o power-up na tela
@@ -22,7 +22,7 @@ public class HealthPowerup extends Powerup {
         GameLib.drawDiamond(getX(), getY(), getRadius());
     }
 
-    public void applyEffect(Player target, long currentTime) {
-        target.heal(3);
+    public void applyEffect(Player target) {
+        target.heal(7);
     }
 }

@@ -18,8 +18,9 @@ public class TripleShooting implements IShooting {
     }
 
     @Override
-    public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {
+    public void shoot(Spaceship self, ArrayList<Projectile> projectiles) {
         // Lógica de tiro
+        long currentTime = Main.getCurrentTime();
         if (currentTime > nextShot) {
             for(int i = 0; i < 3; i++) {
                 double X = self.getX();

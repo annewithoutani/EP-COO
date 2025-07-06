@@ -3,13 +3,11 @@ package entities.spaceships.enemies;
 import core.Main;
 import lib.GameLib;
 import java.awt.Color;
-import java.util.ArrayList;
-import entities.projectiles.Projectile;
-import strategies.movement.ZigZagMovement;
+import strategies.movement.CircleMovement;
 import strategies.shooting.SpiralShooting;
 
 public class Boss2 extends Enemy {
-    public static long nextSpawnTime = System.currentTimeMillis() + 15000;
+    public static long nextSpawnTime = Main.getCurrentTime() + 2000;
     static private boolean hasSpawned = false;
     private final int projectileDamage = 100;
 
@@ -18,17 +16,20 @@ public class Boss2 extends Enemy {
         this.maxHP = maxHP;
         this.hp = maxHP;
 
-        // Configura estratégias específicas para o Boss2 (mais rápido que o Boss1)
-        this.setMovement(new ZigZagMovement());
+        // Configura as condições de movimento do boss
+        double radius = GameLib.WIDTH * 0.3;
+        double centerX = GameLib.WIDTH / 2;        
+        double centerY = GameLib.HEIGHT / 3;        
+        this.setMovement(new CircleMovement(4000, radius, centerX, centerY));
         this.setShooting(new SpiralShooting(47));
 
         hasSpawned = true;
     }
 
     @Override
-    public void draw(long currentTime) {
+    public void draw() {
         if (this.exploding) {
-            double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
+            double alpha = (Main.getCurrentTime() - getExStart()) / (getExEnd() - getExStart());
             GameLib.setColor(new Color(200, 0, 200, (int)(alpha * 255)));
         }
         else {
@@ -49,14 +50,6 @@ public class Boss2 extends Enemy {
                 barWidth * healthPercentage, 6);
         GameLib.setColor(Color.CYAN);
         GameLib.fillRect(getX() - barWidth/2, getY() - radius - 15, barWidth, 6);
-    }
-
-    @Override
-    public void takeDamage(int damage) {
-        this.hp -= damage;
-        if (this.hp <= 0) {
-            explode(System.currentTimeMillis());
-        }
     }
 
     public static boolean getSpawnStatus() {return hasSpawned;}

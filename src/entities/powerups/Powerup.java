@@ -14,12 +14,12 @@ import strategies.movement.StraightMovement;
 public abstract class Powerup extends Entity {
     public static long nextSpawnTime = 5000;
 
-    protected Powerup(double x, double y, long currentTime) {
+    protected Powerup(double x, double y) {
         // Se movem para baixo em linha reta
         super(x, y, 12.0);
         this.setMovement(new StraightMovement(0.0, 0.25));
-        nextSpawnTime = currentTime + 3000 + (long)(Math.random() * 12000);
+        nextSpawnTime = Main.getCurrentTime() + 3000 + (long)(Math.random() * 12000);
     }
 
-    public abstract void applyEffect(Player target, long currentTime);
+    public abstract void applyEffect(Player target);
 }

@@ -1,41 +1,34 @@
 package strategies.movement;
 
+import core.Main;
 import lib.GameLib;
 import entities.Entity;
 import strategies.IMovement;
 
 public class CircleMovement implements IMovement {
 
-    private double speed;
-    private double rv = 0.0; // velocidade de rotação
-    private double angle = (3 * Math.PI) / 2;
+    private double angle = 0;   // angulo atual em relação ao eixo X
+    private double period;     // velocidade angular
+    private double radius;      // raio do movimento
+    private double centerX;     // coordenadas do centro do movimento
+    private double centerY;
 
-    public CircleMovement(double speed) {
-        this.speed = speed;
+    public CircleMovement(double period, double radius, double centerX, double centerY) {
+        this.period = period;
+        this.radius = radius;
+        this.centerX = centerX;
+        this.centerY = centerY;
     }
 
     @Override
     public void move(Entity self, long delta) {
-        double prevY = self.getY();
+        long currentTime = Main.getCurrentTime();
 
-        self.setX(self.getX() + speed * Math.cos(angle) * delta);
-        self.setY(self.getY() - speed * Math.sin(angle) * delta);
+        double angle = (((double)currentTime % period) / period) * Math.PI * 2;
+        double X = centerX + Math.cos(angle) * radius; // velocidade base 0.3
+        double Y = centerY + Math.sin(angle) * radius;
 
-        angle += rv * delta;
-
-        double threshold = GameLib.HEIGHT * 0.30;
-        
-        if(prevY < threshold && self.getY() >= threshold) {
-            if(self.getX() < GameLib.WIDTH / 2) rv = 0.003;
-            else rv = -0.003;
-        }
-        
-        if(rv > 0 && Math.abs(angle - 3 * Math.PI) < 0.05){
-            rv = 0.0;
-            angle = 3 * Math.PI;
-        } else if(rv < 0 && Math.abs(angle) < 0.05){            
-            rv = 0.0;
-            angle = 0.0;
-        }
+        self.setX(X);
+        self.setY(Y);
     }
 }

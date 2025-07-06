@@ -13,8 +13,8 @@ public class FireratePowerup extends Powerup {
      ****************************************************/
     private long duration;
 
-    public FireratePowerup(double x, double y, long currentTime) {
-        super(x, y, currentTime);
+    public FireratePowerup(double x, double y) {
+        super(x, y);
         duration = 6000;
     }
 
@@ -26,9 +26,9 @@ public class FireratePowerup extends Powerup {
         GameLib.drawDiamond(getX(), getY(), getRadius());
     }
 
-    public void applyEffect(Player target, long currentTime) {
+    public void applyEffect(Player target) {
         PlayerShooting shooting = (PlayerShooting) target.getShooting();
-        shooting.activateSuperfire(currentTime, duration);
+        shooting.activateSuperfire(duration);
         // Define a frequência de tiro para o dobro do original
         shooting.setFirerate(25);
     }

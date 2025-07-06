@@ -7,6 +7,11 @@ import entities.spaceships.player.Player;
 import java.util.List;
 
 public class CollisionManager {
+    private static long collisionDamageTime = 0;
+    // As leniencias das colisões são a "folga" entre as
+    // hitbox envolvidas para a colisão ser detectada
+    private static double lowLeniency = 0.9;
+    private static double highLeniency = 0.8;
 
     private CollisionManager() {
         // Construtor privado para evitar instanciação
@@ -20,8 +25,8 @@ public class CollisionManager {
     public static void checkAllCollisions(Player player, List<Enemy> enemies, 
                                    List<Projectile> playerProjectiles, 
                                    List<Projectile> enemyProjectiles, 
-                                   List<Powerup> powerups, long currentTime) {
-        
+                                   List<Powerup> powerups) {
+        long currentTime = Main.getCurrentTime();
         checkPlayerProjectilesVsEnemies(playerProjectiles, enemies, currentTime);
         
         if (!player.isExploding()) {
@@ -50,7 +55,7 @@ public class CollisionManager {
                     if(e instanceof Boss1 || e instanceof Boss2) {
                         e.takeDamage(5);
                     } else {
-                        e.explode(currentTime);                    
+                        e.explode();
                     }
                 }
             }
@@ -66,10 +71,16 @@ public class CollisionManager {
             double dy = player.getY() - e.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < (player.getRadius() + e.getRadius()) * 0.8) {
-                player.takeDamage(1);
-                player.explode(currentTime); // Player explode
-                e.explode(currentTime); // Inimigo também é destruído na colisão
+            //Se você colide com um inimigo
+            if (distance < (player.getRadius() + e.getRadius()) * highLeniency && currentTime > collisionDamageTime) {
+                if(e instanceof Boss1 || e instanceof Boss2) {
+                    player.takeDamage(3); // Bosses dão 3 de dano na colisão
+                } else {
+                    player.takeDamage(1); // Inimigos normais dão 1
+                    e.explode(); // Inimigo também é destruído na colisão                    
+                }
+
+                collisionDamageTime = currentTime + 500;
             }
         }
     }
@@ -83,9 +94,9 @@ public class CollisionManager {
             double dy = player.getY() - p.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < (ShieldPowerup.radius + p.getRadius()) * 0.8) {
+            if (distance < (ShieldPowerup.radius + p.getRadius()) * highLeniency) {
                 shouldRemove = true;
-                player.startFlashing(currentTime);
+                player.startFlashing();
             }
 
             return shouldRemove;
@@ -98,9 +109,13 @@ public class CollisionManager {
             double dy = player.getY() - e.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < (ShieldPowerup.radius + e.getRadius()) * 1.0) {
-                e.explode(currentTime); // Inimigo é destruído na colisão                
-                player.startFlashing(currentTime);
+            if (distance < (ShieldPowerup.radius + e.getRadius()) * lowLeniency) {
+                if(e instanceof Boss1 || e instanceof Boss2) {
+                    player.deactivateShield();
+                    continue;
+                }
+                e.explode(); // Inimigo é destruído na colisão                
+                player.startFlashing();
             }
         }
     }
@@ -114,14 +129,14 @@ public class CollisionManager {
             double dy = player.getY() - p.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < (player.getRadius() + p.getRadius()) * 0.8) {
+            if (distance < (player.getRadius() + p.getRadius()) * highLeniency) {
                 shouldRemove = true;
                 player.takeDamage(1);
 
                 if (player.isDead()) {
-                    player.explode(currentTime);
+                    player.explode();
                 } else {
-                    player.startFlashing(currentTime);
+                    player.startFlashing();
                 }
             }
 
@@ -138,8 +153,8 @@ public class CollisionManager {
             double dy = player.getY() - p.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < (player.getRadius() + p.getRadius()) * 0.8) {
-                p.applyEffect(player, currentTime);
+            if (distance < (player.getRadius() + p.getRadius()) * highLeniency) {
+                p.applyEffect(player);
                 shouldRemove = true;
             }
 

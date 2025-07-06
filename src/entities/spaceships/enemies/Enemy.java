@@ -1,6 +1,5 @@
 package entities.spaceships.enemies;
 
-import core.Main;
 import java.util.ArrayList;
 import entities.spaceships.Spaceship;
 import entities.projectiles.Projectile;
@@ -14,10 +13,10 @@ public abstract class Enemy extends Spaceship {
         super(X, Y, radius); // Chama o construtor da classe Entity
     }
 
-    public final void update(long delta, long currentTime, ArrayList<Projectile> enemyProjectiles) {
+    public void update(long delta, ArrayList<Projectile> enemyProjectiles) {
         if (!this.exploding) {
             this.move(delta);
-            this.shoot(currentTime, enemyProjectiles);
+            this.shoot(enemyProjectiles);
         }
     }
 }

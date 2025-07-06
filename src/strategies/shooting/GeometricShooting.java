@@ -20,7 +20,9 @@ public class GeometricShooting implements IShooting {
     }
 
     @Override
-    public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {
+    public void shoot(Spaceship self, ArrayList<Projectile> projectiles) {
+        long currentTime = Main.getCurrentTime();
+        
         if (currentTime > nextShot) {
             for(int i = 0; i < directions; i++) {
                 double X = self.getX();

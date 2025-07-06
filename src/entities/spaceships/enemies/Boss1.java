@@ -3,13 +3,11 @@ package entities.spaceships.enemies;
 import core.Main;
 import lib.GameLib;
 import java.awt.Color;
-import java.util.ArrayList;
-import entities.projectiles.Projectile;
 import strategies.movement.ZigZagMovement;
 import strategies.shooting.GeometricShooting;
 
 public class Boss1 extends Enemy {
-    public static long nextSpawnTime = System.currentTimeMillis() + 2000;
+    public static long nextSpawnTime = Main.getCurrentTime() + 80000;
     static private boolean hasSpawned = false;
 
     public Boss1(double X, double Y, int maxHP) {
@@ -25,7 +23,9 @@ public class Boss1 extends Enemy {
     }
 
     @Override
-    public void draw(long currentTime) {
+    public void draw() {
+        long currentTime = Main.getCurrentTime();
+
         if (this.exploding) {
             GameLib.setColor(Color.ORANGE);
             GameLib.drawDiamond(getX(), getY(), radius * 2); // Explosão maior
@@ -65,14 +65,6 @@ public class Boss1 extends Enemy {
                 barWidth * healthPercentage, 5);
         GameLib.setColor(Color.WHITE);
         GameLib.fillRect(getX() - barWidth/2, getY() - radius - 10, barWidth, 5);
-    }
-
-    @Override
-    public void takeDamage(int damage) {
-        this.hp -= damage;
-        if (this.hp <= 0) {
-            explode(System.currentTimeMillis());
-        }
     }
 
     public static boolean getSpawnStatus() {return hasSpawned;}

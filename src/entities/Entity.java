@@ -1,9 +1,7 @@
 package entities;
 
-import core.Main;
 import lib.GameLib;
 import strategies.IMovement;
-import entities.spaceships.enemies.Enemy2;
 
 public abstract class Entity {
     protected double X, Y, radius;
@@ -16,11 +14,7 @@ public abstract class Entity {
         this.movement = null;
     }
 
-    // Update base para todas as entidades apenas checa se
-    // a entidade está fora da tela:
-    // - caso sim: deixa ela inativa
-    // - caso não: movimenta ela de acordo com sua estratégia
-    public void update(long currentTime, long delta) {
+    public void update(long delta) {
         this.move(delta);
     }
 
@@ -45,7 +39,7 @@ public abstract class Entity {
     } 
     
     /** Verifica se não está inativo e chama o draw (delegado pela entidade) **/
-    public final void render(){
+    public void render(){
         draw();
     }
 

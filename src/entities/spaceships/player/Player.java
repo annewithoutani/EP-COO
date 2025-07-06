@@ -1,16 +1,14 @@
 package entities.spaceships.player;
 
-import lib.GameLib;
 import core.Main;
-
-import entities.projectiles.Projectile;
+import lib.GameLib;
+import java.awt.Color;
+import java.util.ArrayList;
 import entities.spaceships.Spaceship;
+import entities.projectiles.Projectile;
 import strategies.movement.PlayerMovement;
 import strategies.shooting.PlayerShooting;
 import entities.powerups.ShieldPowerup;
-
-import java.awt.Color;
-import java.util.ArrayList;
 
 public class Player extends Spaceship {
     private boolean isFlashing; // Indica se o jogador está piscando devido a dano
@@ -35,7 +33,9 @@ public class Player extends Spaceship {
     }
 
     // Método para atualizar o estado do jogador
-    public void update(long currentTime, long delta) {
+    public void update(long delta) {
+        long currentTime = Main.getCurrentTime();
+
         if (this.exploding) {
             // Se o tempo atual for maior que o tempo de fim da explosão, restaura o jogador
             if (currentTime > exEnd) {
@@ -46,7 +46,7 @@ public class Player extends Spaceship {
             }
         } else {
             this.move(delta);
-            this.shoot(currentTime, projectiles);
+            this.shoot(projectiles);
         }
 
         if (isFlashing && currentTime > flashEndTime) {
@@ -59,9 +59,9 @@ public class Player extends Spaceship {
     }
 
     // Método para iniciar o efeito de piscagem
-    public void startFlashing(long currentTime) {
+    public void startFlashing() {
         isFlashing = true; // Ativa o efeito de piscagem
-        flashEndTime = currentTime + 200; // Define o tempo de fim da piscagem (200 milissegundos)
+        flashEndTime = Main.getCurrentTime() + 200; // Define o tempo de fim da piscagem (200 milissegundos)
     }
 
     public void drawHealthBar() {
@@ -84,9 +84,9 @@ public class Player extends Spaceship {
     }
 
     // Método para renderizar o jogador na tela
-    public void draw(long currentTime) {
+    public void draw() {
         if (this.exploding) {
-            double alpha = (currentTime - getExStart()) / (getExEnd() - getExStart());
+            double alpha = (Main.getCurrentTime() - getExStart()) / (getExEnd() - getExStart());
             GameLib.drawExplosion(getX(), getY(), alpha);
         } else {
             // Desenha a barra de vida primeiro (para ficar atrás do jogador se necessário)

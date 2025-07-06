@@ -1,13 +1,12 @@
 package strategies;
 
-import entities.spaceships.Spaceship;
-import entities.spaceships.player.Player;
-import entities.projectiles.Projectile;
 import java.util.ArrayList;
+import entities.spaceships.Spaceship;
+import entities.projectiles.Projectile;
 
 /*****************************************************
  * Contrato para todas as estratégias de tiro.       *
  *****************************************************/
 public interface IShooting {
-    void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles);
+    void shoot(Spaceship self, ArrayList<Projectile> projectiles);
 }
