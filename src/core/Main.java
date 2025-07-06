@@ -2,7 +2,6 @@ package core;
 
 import utils.*;
 import lib.GameLib;
-import java.awt.Color;
 import entities.Entity;
 import java.util.Random;
 import java.util.ArrayList;
@@ -56,12 +55,9 @@ public class Main {
 	public Main() {
 		// Inicializa as listas
 		this.enemies = new ArrayList<>();
-		this.playerProjectiles = new ArrayList<>(50);
-		this.enemyProjectiles = new ArrayList<>(150);
+		this.playerProjectiles = new ArrayList<>();
+		this.enemyProjectiles = new ArrayList<>();
 		this.powerups = new ArrayList<>();
-
-		for(int i = 0; i < 50; i++) {playerProjectiles.add(new Projectile(-50.0, -50.0, 0.0, 0.0, Color.GREEN));}
-		for(int i = 0; i < 150; i++) {enemyProjectiles.add(new Projectile(-50.0, -50.0, 0.0, 0.0, Color.RED));}
 
 		// Inicializa as entidades principais
 		this.player = new Player(7, playerProjectiles);
@@ -105,6 +101,8 @@ public class Main {
 	    	Enemy newEnemy = new Enemy1(spawnX, spawnY);
 	        enemies.add(newEnemy); // Adiciona na lista unificada
 	        nextE1 = currentTime + 1200;
+	        System.out.println("inimigo 1 criado");
+	        System.out.println(enemies.size());
 	    }
 
 	    // Lançando Inimigos do tipo 2
@@ -215,7 +213,6 @@ public class Main {
 
 	private void removeDeadEnemies(){
 		enemies.removeIf(e -> e.getState() == Main.INACTIVE);
-		System.out.println(enemies.size());
 	}
 
 	private void render(long delta, long currentTime) {

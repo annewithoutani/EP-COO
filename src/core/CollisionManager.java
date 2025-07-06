@@ -33,30 +33,27 @@ public class CollisionManager {
     }
 
     private static void checkPlayerProjectilesVsEnemies(List<Projectile> playerProjectiles, List<Enemy> enemies, long currentTime) {
-        for (Projectile p : playerProjectiles) {
-            if (p.getState() != Main.ACTIVE) continue;
-
+        // Removendo projéteis que atingiram inimigos
+        // E causando os efeitos do impacto
+        playerProjectiles.removeIf(p -> {
+            boolean shouldRemove = false;
             for (Enemy e : enemies) {
-                if (e.getState() != Main.ACTIVE) continue;
-
                 // Lógica de cálculo de distância
                 double dx = p.getX() - e.getX();
                 double dy = p.getY() - e.getY();
                 double distance = Math.sqrt(dx * dx + dy * dy);
-
+                
                 if (distance < e.getRadius()) {
+                    shouldRemove = true;
                     if(e instanceof Boss1 || e instanceof Boss2) {
                         e.takeDamage(5);
-                        p.setState(Main.INACTIVE);
                     } else {
-                        // Causa a explosão do inimigo
                         e.explode(currentTime);                    
-                        // Desativa o projétil
-                        p.setState(Main.INACTIVE);
                     }
                 }
             }
-        }
+            return shouldRemove;
+        });
     }
     
     private static void checkPlayerVsEnemies(Player player, List<Enemy> enemies, long currentTime) {
@@ -77,19 +74,20 @@ public class CollisionManager {
 
     private static void checkShieldVsThreats(Player player, List<Enemy> enemies, List<Projectile> enemyProjectiles, long currentTime) {
         if (!player.isShieldActive()) return;
-        
-        for (Projectile p : enemyProjectiles) {
-            if (p.getState() != Main.ACTIVE) continue;
-            
+        enemyProjectiles.removeIf(p -> {
+            boolean shouldRemove = false;
+                        
             double dx = player.getX() - p.getX();
             double dy = player.getY() - p.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < (ShieldPowerup.radius + p.getRadius()) * 0.8) {
-                p.setState(Main.INACTIVE); // Projétil é "destruído"
+                shouldRemove = true;
                 player.startFlashing(currentTime);
             }
-        }
+
+            return shouldRemove;
+        });
 
         for (Enemy e : enemies) {
             if (e.getState() != Main.ACTIVE) continue;
@@ -106,16 +104,17 @@ public class CollisionManager {
     }
     
     private static void checkPlayerVsEnemyProjectiles(Player player, List<Projectile> enemyProjectiles, long currentTime) {
-        for (Projectile p : enemyProjectiles) {
-            if (p.getState() != Main.ACTIVE) continue;
-            
+        // Removendo projéteis inimigos que colidiram
+        // e aplicando os efeitos da colisão
+        enemyProjectiles.removeIf(p -> {
+            boolean shouldRemove = false;
             double dx = player.getX() - p.getX();
             double dy = player.getY() - p.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < (player.getRadius() + p.getRadius()) * 0.8) {
+                shouldRemove = true;
                 player.takeDamage(1);
-                p.setState(Main.INACTIVE); // Projétil é destruído
 
                 if (player.isDead()) {
                     player.explode(currentTime);
@@ -123,21 +122,26 @@ public class CollisionManager {
                     player.startFlashing(currentTime);
                 }
             }
-        }
+
+            return shouldRemove;
+        });
     }
 
     private static void checkPlayerVsPowerups(Player player, List<Powerup> powerups, long currentTime) {
-        for (Powerup p : powerups) {
-            if (p.getState() != Main.ACTIVE) continue;
-            
+        // Removendo os powerups que o jogador pegou
+        // e aplicando os efeitos deles
+        powerups.removeIf(p -> {
+            boolean shouldRemove = false;
             double dx = player.getX() - p.getX();
             double dy = player.getY() - p.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < (player.getRadius() + p.getRadius()) * 0.8) {
-                p.setState(Main.INACTIVE);
                 p.applyEffect(player, currentTime);
+                shouldRemove = true;
             }
-        }
+
+            return shouldRemove;
+        });
     }
 }

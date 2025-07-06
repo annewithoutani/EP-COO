@@ -2,6 +2,7 @@ package strategies.shooting;
 
 import core.Main;
 import lib.GameLib;
+import java.awt.Color;
 import java.util.ArrayList;
 import strategies.IShooting;
 import entities.spaceships.Spaceship;
@@ -21,22 +22,19 @@ public class PlayerShooting implements IShooting {
         // Lógica de tiro
         if (GameLib.iskeyPressed(GameLib.KEY_CONTROL)) {
             if (currentTime > nextShot) {
-                int free = Main.findFreeIndex(projectiles);
-                if (free < projectiles.size()) {
-                    Projectile p = projectiles.get(free);
-                    p.setState(Main.ACTIVE);
-                    p.setMovement(new StraightMovement(0.0, -1.0));
-                    p.setX(self.getX());
-                    p.setY(self.getY() - 2 * self.getRadius());
-                    
-                    // A frequência de tiro é controlada aqui.
-                    if (superfire == true && currentTime > superfireEndTime){
-                        deactivateSuperfire();
-                        resetFirerate();
-                    }
+                double X = self.getX();
+                double Y = self.getY() - 2 * self.getRadius();
 
-                    nextShot = currentTime + firerate;
+                Projectile p = new Projectile(X, Y, 0.0, -1.0, Color.GREEN);
+                projectiles.add(p);
+                
+                // A frequência de tiro é controlada aqui.
+                if (superfire == true && currentTime > superfireEndTime){
+                    deactivateSuperfire();
+                    resetFirerate();
                 }
+
+                nextShot = currentTime + firerate;
             }
         }
     }

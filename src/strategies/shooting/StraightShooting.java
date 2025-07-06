@@ -1,6 +1,7 @@
 package strategies.shooting;
 
 import core.Main;
+import java.awt.Color;
 import java.util.ArrayList;
 import strategies.IShooting;
 import entities.spaceships.Spaceship;
@@ -12,19 +13,15 @@ public class StraightShooting implements IShooting {
 
     @Override
     public void shoot(Spaceship self, long currentTime, ArrayList<Projectile> projectiles) {
-        // Lógica de tiro
+        double X = self.getX();
+        double Y = self.getY();
+
         if (currentTime > nextShot) {
-            int free = Main.findFreeIndex(projectiles);
-            if (free < projectiles.size()) {
-                Projectile p = projectiles.get(free);
-                p.setMovement(new StraightMovement(0.0, 0.3));
-                p.setX(self.getX());
-                p.setY(self.getY());
-                p.setState(Main.ACTIVE);
-                
-                // A frequência de tiro é controlada aqui dentro.
-                nextShot = (long)(currentTime + 300 + Math.random() * 400);
-            }
+            Projectile p = new Projectile(X, Y, 0.0, 0.3, Color.RED);
+            projectiles.add(p);
+            
+            // A frequência de tiro é controlada aqui dentro.
+            nextShot = (long)(currentTime + 300 + Math.random() * 400);
         }
     }
 }
