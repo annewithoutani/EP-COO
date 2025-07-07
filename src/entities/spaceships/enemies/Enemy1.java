@@ -10,8 +10,8 @@ public class Enemy1 extends Enemy {
     public static long nextSpawnTime = Main.getCurrentTime() + 1000;
 
     // Construtor da classe Enemy1
-    public Enemy1(double X, double Y) {
-        super(X, Y, 9.00);
+    public Enemy1(double X, double Y, long spawnTime) {
+        super(X, Y, 9.00, spawnTime);
         this.maxHP = 1;
         this.hp = 1;
         

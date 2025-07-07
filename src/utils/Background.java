@@ -2,29 +2,30 @@ package utils;
 
 import lib.GameLib;
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Background {
     // Atributos da classe Background
     private double speed; // Velocidade de movimento do fundo
     private double count; // Contador para calcular a posição do fundo
-    private double[] x; // Array de posições X das estrelas no fundo
-    private double[] y; // Array de posições Y das estrelas no fundo
     private int size; // Número de estrelas no fundo
     private int w; // Largura das estrelas
+    private ArrayList <Double> x; // Array de posições X das estrelas no fundo
+    private ArrayList <Double> y; // Array de posições Y das estrelas no fundo
 
     // Construtor da classe Background
     public Background(long count, double speed, int size, int w) {
+        this.x = new ArrayList<>();
+        this.y = new ArrayList<>();
         this.count = count; // Inicializa o contador
         this.speed = speed; // Inicializa a velocidade
         this.size = size; // Inicializa o número de estrelas
         this.w = w; // Inicializa a largura das estrelas
-        x = new double[size]; // Inicializa o array de posições X
-        y = new double[size]; // Inicializa o array de posições Y
 
         // Define posições iniciais aleatórias para as estrelas
         for (int i = 0; i < size; i++) {
-            x[i] = Math.random() * GameLib.WIDTH;
-            y[i] = Math.random() * GameLib.HEIGHT;
+            x.add(Math.random() * GameLib.WIDTH); // Adiciona na lista unificada
+            y.add(Math.random() * GameLib.HEIGHT); // Adiciona na lista unificada
         }
     }
 
@@ -35,8 +36,8 @@ public class Background {
 
         // Atualiza a posição das estrelas e as desenha na tela
         for (int i = 0; i < size; i++) {
-            double newY = (y[i] + count) % GameLib.HEIGHT;
-            GameLib.fillRect(x[i], newY, w, w);
+            double newY = (y.get(i) + count) % GameLib.HEIGHT;
+            GameLib.fillRect(x.get(i), newY, w, w);
         }
     }
 
@@ -47,8 +48,8 @@ public class Background {
 
         // Atualiza a posição das estrelas e as desenha na tela
         for (int i = 0; i < size; i++) {
-            double newY = (y[i] + count) % GameLib.HEIGHT;
-            GameLib.fillRect(x[i], newY, w, w);
+            double newY = (y.get(i) + count) % GameLib.HEIGHT;
+            GameLib.fillRect(x.get(i), newY, w, w);
         }
     }
 }

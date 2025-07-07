@@ -13,8 +13,8 @@ public class ShieldPowerup extends Powerup {
     private long duration;
     public static final double radius = 37.0;
 
-    public ShieldPowerup(double x, double y) {
-        super(x, y);
+    public ShieldPowerup(double x, double y, long spawnTime) {
+        super(x, y, spawnTime);
         duration = 5000;
     }
 

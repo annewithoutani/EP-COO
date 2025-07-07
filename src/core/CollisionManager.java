@@ -7,6 +7,7 @@ import entities.spaceships.player.Player;
 import java.util.List;
 
 public class CollisionManager {
+    // Tempo para definir o cooldown entre uma colisão e outra
     private static long collisionDamageTime = 0;
     // As leniencias das colisões são a "folga" entre as
     // hitbox envolvidas para a colisão ser detectada
@@ -26,22 +27,22 @@ public class CollisionManager {
                                    List<Projectile> playerProjectiles, 
                                    List<Projectile> enemyProjectiles, 
                                    List<Powerup> powerups) {
-        long currentTime = Main.getCurrentTime();
-        checkPlayerProjectilesVsEnemies(playerProjectiles, enemies, currentTime);
+        checkPlayerProjectilesVsEnemies(playerProjectiles, enemies);
         
         if (!player.isExploding()) {
-            checkPlayerVsEnemies(player, enemies, currentTime);
-            checkShieldVsThreats(player, enemies, enemyProjectiles, currentTime);
-            checkPlayerVsEnemyProjectiles(player, enemyProjectiles, currentTime);
-            checkPlayerVsPowerups(player, powerups, currentTime);
+            checkPlayerVsEnemies(player, enemies);
+            checkShieldVsThreats(player, enemies, enemyProjectiles);
+            checkPlayerVsEnemyProjectiles(player, enemyProjectiles);
+            checkPlayerVsPowerups(player, powerups);
         }
     }
 
-    private static void checkPlayerProjectilesVsEnemies(List<Projectile> playerProjectiles, List<Enemy> enemies, long currentTime) {
+    private static void checkPlayerProjectilesVsEnemies(List<Projectile> playerProjectiles, List<Enemy> enemies) {
         // Removendo projéteis que atingiram inimigos
         // E causando os efeitos do impacto
         playerProjectiles.removeIf(p -> {
             boolean shouldRemove = false;
+            // Itera para cada inimigo e verifica se ele não está explodindo
             for (Enemy e : enemies) {
                 if (e.isExploding()) continue;
 
@@ -63,7 +64,8 @@ public class CollisionManager {
         });
     }
     
-    private static void checkPlayerVsEnemies(Player player, List<Enemy> enemies, long currentTime) {
+    private static void checkPlayerVsEnemies(Player player, List<Enemy> enemies) {
+        long currentTime = Main.getCurrentTime();
         for (Enemy e : enemies) {
             if (e.isExploding()) continue;
             
@@ -76,8 +78,8 @@ public class CollisionManager {
                 if(e instanceof Boss1 || e instanceof Boss2) {
                     player.takeDamage(3); // Bosses dão 3 de dano na colisão
                 } else {
-                    player.takeDamage(1); // Inimigos normais dão 1
-                    e.explode(); // Inimigo também é destruído na colisão                    
+                    player.explode(); // Se o inimigo não é boss, você explode
+                    e.explode(); // ... mas o inimigo também é destruído na colisão                    
                 }
 
                 collisionDamageTime = currentTime + 1500;
@@ -85,7 +87,7 @@ public class CollisionManager {
         }
     }
 
-    private static void checkShieldVsThreats(Player player, List<Enemy> enemies, List<Projectile> enemyProjectiles, long currentTime) {
+    private static void checkShieldVsThreats(Player player, List<Enemy> enemies, List<Projectile> enemyProjectiles) {
         if (!player.isShieldActive()) return;
         enemyProjectiles.removeIf(p -> {
             boolean shouldRemove = false;
@@ -120,7 +122,7 @@ public class CollisionManager {
         }
     }
     
-    private static void checkPlayerVsEnemyProjectiles(Player player, List<Projectile> enemyProjectiles, long currentTime) {
+    private static void checkPlayerVsEnemyProjectiles(Player player, List<Projectile> enemyProjectiles) {
         // Removendo projéteis inimigos que colidiram
         // e aplicando os efeitos da colisão
         enemyProjectiles.removeIf(p -> {
@@ -144,7 +146,7 @@ public class CollisionManager {
         });
     }
 
-    private static void checkPlayerVsPowerups(Player player, List<Powerup> powerups, long currentTime) {
+    private static void checkPlayerVsPowerups(Player player, List<Powerup> powerups) {
         // Removendo os powerups que o jogador pegou
         // e aplicando os efeitos deles
         powerups.removeIf(p -> {

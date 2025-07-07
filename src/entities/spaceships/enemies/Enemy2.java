@@ -12,8 +12,8 @@ public class Enemy2 extends Enemy {
     private static int formationCount = 0; // Contador para determinar a "minhoquinha"
 
     // Construtor da classe Enemy2
-    public Enemy2(double X, double Y) {
-        super(X, Y, 12.00);
+    public Enemy2(double X, double Y, long spawnTime) {
+        super(X, Y, 12.00, spawnTime);
         this.maxHP = 1;
         this.hp = 1;
         long currentTime = Main.getCurrentTime();

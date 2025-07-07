@@ -10,8 +10,8 @@ public class Boss1 extends Enemy {
     public static long nextSpawnTime = Main.getCurrentTime() + 20000;
     static private boolean hasSpawned = false;
 
-    public Boss1(double X, double Y, int maxHP) {
-        super(X, Y, 50.00); // Raio maior para o boss
+    public Boss1(double X, double Y, int maxHP, long spawnTime) {
+        super(X, Y, 50.00, spawnTime); // Raio maior para o boss
         this.maxHP = maxHP;
         this.hp = maxHP;
 

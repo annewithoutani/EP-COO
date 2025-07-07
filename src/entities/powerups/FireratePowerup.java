@@ -13,8 +13,8 @@ public class FireratePowerup extends Powerup {
      ****************************************************/
     private long duration;
 
-    public FireratePowerup(double x, double y) {
-        super(x, y);
+    public FireratePowerup(double x, double y, long spawnTime) {
+        super(x, y, spawnTime);
         duration = 6000;
     }
 

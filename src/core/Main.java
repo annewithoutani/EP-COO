@@ -2,6 +2,7 @@ package core;
 
 import utils.*;
 import lib.GameLib;
+import java.util.Queue;
 import java.util.Random;
 import java.util.ArrayList;
 import entities.powerups.*;
@@ -38,66 +39,72 @@ public class Main {
 	private ArrayList<Projectile> enemyProjectiles;
 	private ArrayList<Powerup> powerups;
 
+	private Queue<Level> levels;
+
 	// Construtor da classe Main
 	public Main() {
+		// Lê os arquivos de configuração e inicializa os níveis
+		Config.setupConfig();
+		levels = Config.setupLevels();
+
 		// Inicializa as listas
-		this.enemies = new ArrayList<>();
 		this.playerProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
+		this.enemies = new ArrayList<>();
 		this.powerups = new ArrayList<>();
 
 		// Inicializa as entidades principais
-		this.player = new Player(7, playerProjectiles);
+		this.player = new Player(Config.playerHP, playerProjectiles);
 		this.background1 = new Background(0, 0.070, 20, 2);
 		this.background2 = new Background(0, 0.045, 50, 3);
 	}
 
-	private void launchPowerups() {
-		if (currentTime > Powerup.nextSpawnTime) {
-	    	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 10.0;
-	    	double spawnY = -10.0;
-	    	Powerup newPowerup;
-	        int rand = new Random().nextInt(3) + 1;
+	// private void launchPowerups() {
+	// 	if (currentTime > Powerup.nextSpawnTime) {
+	//     	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 10.0;
+	//     	double spawnY = -10.0;
+	//     	Powerup newPowerup;
+	//         int rand = new Random().nextInt(3) + 1;
 
-	        if (rand == 1){
-	            newPowerup = new HealthPowerup(spawnX, spawnY);
-	        } else if (rand == 2){
-	            newPowerup = new ShieldPowerup(spawnX, spawnY);
-	        } else {
-	            newPowerup = new FireratePowerup(spawnX, spawnY);
-	        }
+	//         if (rand == 1){
+	//             newPowerup = new HealthPowerup(spawnX, spawnY);
+	//         } else if (rand == 2){
+	//             newPowerup = new ShieldPowerup(spawnX, spawnY);
+	//         } else {
+	//             newPowerup = new FireratePowerup(spawnX, spawnY);
+	//         }
 
-	        powerups.add(newPowerup); // Adiciona na lista unificada
-	    }
-	}
+	//         powerups.add(newPowerup); // Adiciona na lista unificada
+	//     }
+	// }
 
-	// Método para lançar novos inimigos
-	private void launchNewEnemies() {
-	    // Lançando Inimigos do tipo 1
-	    if (currentTime > Enemy1.nextSpawnTime) {
-	    	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 9.0;
-	    	Enemy newEnemy = new Enemy1(spawnX, spawnY);
-	        enemies.add(newEnemy); // Adiciona na lista unificada
-	    }
+	// // Método para lançar novos inimigos
+	// private void launchNewEnemies() {
+	//     // Lançando Inimigos do tipo 1
+	//     if (currentTime > Enemy1.nextSpawnTime) {
+	//     	double spawnX = Math.random() * (GameLib.WIDTH - 20.0) + 9.0;
+	//     	Enemy newEnemy = new Enemy1(spawnX, spawnY);
+	//         enemies.add(newEnemy); // Adiciona na lista unificada
+	//     }
 
-	    // Lançando Inimigos do tipo 2
-	    if (currentTime > Enemy2.nextSpawnTime) {
-	    	Enemy newEnemy = new Enemy2(Enemy2.spawnX, spawnY);
-	        enemies.add(newEnemy); // Adiciona na lista unificada
-	    }
+	//     // Lançando Inimigos do tipo 2
+	//     if (currentTime > Enemy2.nextSpawnTime) {
+	//     	Enemy newEnemy = new Enemy2(Enemy2.spawnX, spawnY);
+	//         enemies.add(newEnemy); // Adiciona na lista unificada
+	//     }
 
-	    // Lançando Boss1
-	    if (currentTime > Boss1.nextSpawnTime && !Boss1.getSpawnStatus()) {
-	    	Enemy boss1 = new Boss1(0.0, spawnY, 1000);
-	        enemies.add(boss1); // Adiciona na lista unificada
-	    }
+	//     // Lançando Boss1
+	//     if (currentTime > Boss1.nextSpawnTime && !Boss1.getSpawnStatus()) {
+	//     	Enemy boss1 = new Boss1(0.0, spawnY, 1000);
+	//         enemies.add(boss1); // Adiciona na lista unificada
+	//     }
 
-		// Lançando Boss2
-		if (currentTime > Boss2.nextSpawnTime && !Boss2.getSpawnStatus()) {
-	    	Enemy boss2 = new Boss2(0.0, spawnY, 1500);
-	        enemies.add(boss2); // Adiciona na lista unificada
-		}
-	}
+	// 	// Lançando Boss2
+	// 	if (currentTime > Boss2.nextSpawnTime && !Boss2.getSpawnStatus()) {
+	//     	Enemy boss2 = new Boss2(0.0, spawnY, 1500);
+	//         enemies.add(boss2); // Adiciona na lista unificada
+	// 	}
+	// }
 
 	public void gameLoop() {
 		GameLib.initGraphics(); // Inicializa a biblioteca gráfica
@@ -109,6 +116,17 @@ public class Main {
 			delta = System.currentTimeMillis() - currentTime;
 			// Atualiza o tempo atual
 			currentTime = System.currentTimeMillis();
+
+			if(levels.peek() == null) {
+				if(enemies.size() == 0) {
+					System.out.println("Fim!!!");
+					running = false;
+				}
+			} else {
+				if(!levels.peek().getHasStarted()) {
+					levels.peek().start();
+				}
+			}
 
 			// Verificação de colisões
 			CollisionManager.checkAllCollisions(player, enemies, 
@@ -138,10 +156,16 @@ public class Main {
 			}
 
 			// Lançamento de novos inimigos
-			launchNewEnemies();
-
+			//launchNewEnemies();
 			// Lançamento de powerups
-			launchPowerups();
+			//launchPowerups();
+			if(levels.peek() != null) {
+				enemies.addAll(levels.peek().getSpawningEnemies());
+				powerups.addAll(levels.peek().getSpawningPowerups());
+				if(enemies.size() == 0 && levels.peek().isComplete()) {
+					levels.poll();
+				}
+			}
 
 			// Verificando se o usuário fechou o jogo
 			if (GameLib.iskeyPressed(GameLib.KEY_ESCAPE)) {
